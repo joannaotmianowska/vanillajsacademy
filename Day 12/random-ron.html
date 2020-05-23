@@ -8,54 +8,59 @@
 			margin: 1em auto;
 			max-width: 40em;
 			width: 88%;
-            border-radius: 10px;
-            background-color: #06543c;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
 		}
 
-        .alert {
-            border: 1px solid red;
+        .main {
+            border-radius: 10px;
+            background-color: #06543c;
+            min-height: 20em;
+            width: 20em;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
-
 	</style>
 </head>
 <body>
+    <div class="main">
+        <h1>Random Ron</h1>
 
-	<h1>Random Ron</h1>
+        <blockquote aria-live="polite">Looking for the quote for you...</blockquote>
 
-	<blockquote aria-live="polite"></blockquote>
-
-	<p>
-		<button>More Ron</button>
-	</p>
+        <p>
+            <button>More Ron</button>
+        </p>
+    </div>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default%2Cfetch"></script>
 	<script>
 		const blockquote = document.querySelector('blockquote');
         const button = document.querySelector('button');
         const url = 'https://ron-swanson-quotes.herokuapp.com/v2/quotes';
-        const errorMessage = "Oops! Something went wrong. Click the button to get the quote"
+        const errorMessage = 'Oops! Something went wrong. Click the button to get the quote';
 
         function displayQuote(quote) {
             blockquote.textContent = quote;
         }
 
-        function fetchAndDisplayRandomQuote() {
+        function fetchAndShowRandomQuote() {
             fetch(url)
                 .then(res => {
-                    if (res.ok) {
-                        return res.json();
-                    } else {
-                        return Promise.reject(res);
-                    }
+                    return res.ok ? res.json() : Promise.reject(res);
                 }).then(data => {
                     displayQuote(data);
                 }).catch(error => {
                     console.error(error);
-                    displayQuote(errorMessage)
+                    displayQuote(errorMessage);
                 });
         }
 
-        document.addEventListener('DOMContentLoaded', fetchAndDisplayRandomQuote);
-        button.addEventListener('click', fetchAndDisplayRandomQuote);
+        document.addEventListener('DOMContentLoaded', fetchAndShowRandomQuote);
+        button.addEventListener('click', fetchAndShowRandomQuote);
 	</script>
 </body>
 </html>
