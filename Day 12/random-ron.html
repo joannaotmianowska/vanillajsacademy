@@ -49,9 +49,9 @@
 
         function fetchAndShowRandomQuote() {
             fetch(url)
-                .then(res => {
-                    return res.ok ? res.json() : Promise.reject(res);
-                }).then(data => {
+                .then(res =>
+                    res.ok ? res.json() : Promise.reject(res)
+                ).then(data => {
                     displayQuote(data);
                 }).catch(error => {
                     console.error(error);
