@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Random Ron</title>
+
+	<style type="text/css">
+		body {
+			margin: 1em auto;
+			max-width: 40em;
+			width: 88%;
+            border-radius: 10px;
+            background-color: #06543c;
+		}
+
+        .alert {
+            border: 1px solid red;
+        }
+
+	</style>
+</head>
+<body>
+
+	<h1>Random Ron</h1>
+
+	<blockquote aria-live="polite"></blockquote>
+
+	<p>
+		<button>More Ron</button>
+	</p>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default%2Cfetch"></script>
+	<script>
+		const blockquote = document.querySelector('blockquote');
+        const button = document.querySelector('button');
+        const url = 'https://ron-swanson-quotes.herokuapp.com/v2/quotes';
+        const errorMessage = "Oops! Something went wrong. Click the button to get the quote"
+
+        function displayQuote(quote) {
+            blockquote.textContent = quote;
+        }
+
+        function fetchAndDisplayRandomQuote() {
+            fetch(url)
+                .then(res => {
+                    if (res.ok) {
+                        return res.json();
+                    } else {
+                        return Promise.reject(res);
+                    }
+                }).then(data => {
+                    displayQuote(data);
+                }).catch(error => {
+                    console.error(error);
+                    displayQuote(errorMessage)
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchAndDisplayRandomQuote);
+        button.addEventListener('click', fetchAndDisplayRandomQuote);
+	</script>
+</body>
+</html>
+
