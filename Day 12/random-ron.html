@@ -52,14 +52,14 @@
                 .then(res =>
                     res.ok ? res.json() : Promise.reject(res)
                 ).then(data => {
-                    displayQuote(data);
+                    displayQuote(data[0]);
                 }).catch(error => {
                     console.error(error);
                     displayQuote(errorMessage);
                 });
         }
 
-        document.addEventListener('DOMContentLoaded', fetchAndShowRandomQuote);
+        fetchAndShowRandomQuote();
         button.addEventListener('click', fetchAndShowRandomQuote);
 	</script>
 </body>
