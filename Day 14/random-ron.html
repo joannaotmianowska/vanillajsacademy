@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Random Ron</title>
+
+	<style type="text/css">
+		body {
+			margin: 1em auto;
+			max-width: 40em;
+			width: 88%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+		}
+
+        .main {
+            border-radius: 10px;
+            background-color: #06543c;
+            min-height: 20em;
+            width: 20em;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+	</style>
+</head>
+<body>
+    <div class="main">
+        <h1>Random Ron</h1>
+
+        <blockquote aria-live="polite">Looking for the quote for you...</blockquote>
+
+        <p>
+            <button>More Ron</button>
+        </p>
+    </div>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default%2Cfetch"></script>
+	<script>
+		const blockquote = document.querySelector('blockquote');
+        const button = document.querySelector('button');
+        const url = 'https://ron-swanson-quotes.herokuapp.com/v2/quotes';
+        const errorMessage = 'Oops! Something went wrong. Click the button to get the quote';
+        const quotes = [];
+        let currentQuote = '';
+
+        function shiftQuotesinArrayAndSaveCurrentQuoteToArray(quote) {
+            if (quotes.length === 50) {
+                quotes.shift();
+                quotes.push(quote)
+            } else {
+                quotes.push(quote)
+            }
+        }
+
+        function handleQuotesUpdate() {
+            if (quotes.indexOf(currentQuote) > -1) {
+                shiftQuotesinArrayAndSaveCurrentQuoteToArray(currentQuote);
+                fetchQuoteAndHandleDisplay();
+            } else {
+                shiftQuotesinArrayAndSaveCurrentQuoteToArray(currentQuote);
+                displayQuote(currentQuote);
+            }
+        }
+
+        function saveCurrentQuote(fetchedQuotes) {
+            currentQuote = fetchedQuotes[0];
+        }
+
+        function displayQuote() {
+            blockquote.textContent = currentQuote;
+        }
+
+        function fetchJSON(res) {
+            return res.ok ? res.json() : Promise.reject(res)
+        }
+
+        function showError(err) {
+            blockquote.textContent = errorMessage;
+        }
+
+        function fetchQuoteAndHandleDisplay() {
+            fetch(url)
+                .then(fetchJSON)
+                .then(saveCurrentQuote)
+                .then(handleQuotesUpdate)
+                .catch(showError)
+        }
+
+        fetchQuoteAndHandleDisplay();
+
+        button.addEventListener('click', fetchQuoteAndHandleDisplay);
+	</script>
+</body>
+</html>
+
