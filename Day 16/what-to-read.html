@@ -63,7 +63,7 @@
             <ul class="articles"></ul>
         </div>
     </div>
-
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default%2Cfetch"></script>
 	<script>
         const list = document.querySelector('.articles');
         const dropdown = document.querySelector('select');
@@ -87,17 +87,17 @@
             return res.ok ? res.json() : Promise.reject(res)
         }
 
+        function showError(err) {
+            console.error(err);
+            list.innerHTML = '<p class="error">Sorry, something went wrong. Please refresh the site</p>';
+        }
+
         function saveArticles(data) {
             articles = data.results;
         }
 
         function toggleDropdownVisibility() {
             dropdownSection.style.display = articles.length !== 0 ? 'block' : 'none';
-        }
-
-        function showError(err) {
-            console.error(err);
-            list.innerHTML = '<p class="error">Sorry, something went wrong. Please refresh the site</p>';
         }
 
         function fetchDataAndHandleArticlesDisplay(url) {
