@@ -9,43 +9,112 @@
 			max-width: 40em;
 			width: 88%;
 		}
+
+        .categories-dropdown-section {
+            display: none;
+        }
+
+        .categories-dropdown {
+            text-transform: capitalize;
+        }
+
+        .error {
+            color: red;
+        }
 	</style>
 </head>
 <body>
 
 	<h1>What to read today</h1>
 
-	<div id="app"></div>
+	<div id="app">
+        <div class="categories-dropdown-section">
+            By default Home category is selected. Use dropdown to select different category.
+            <select class="categories-dropdown">
+                <option>arts</option>
+                <option>automobiles</option>
+                <option>books</option>
+                <option>business</option>
+                <option>fashion</option>
+                <option>food</option>
+                <option>health</option>
+                <option selected>home</option>
+                <option>insider</option>
+                <option>magazine</option>
+                <option>movies</option>
+                <option>nyregion</option>
+                <option>obituaries</option>
+                <option>opinion</option>
+                <option>politics</option>
+                <option>realestate</option>
+                <option>science</option>
+                <option>sports</option>
+                <option>sundayreview</option>
+                <option>technology</option>
+                <option>theater</option>
+                <option>t-magazine</option>
+                <option>travel</option>
+                <option>upshot</option>
+                <option>us</option>
+                <option>world</option>
+            </select>
+        </div>
+        <div>
+            <ul class="articles"></ul>
+        </div>
+    </div>
 
 	<script>
-        const list = document.querySelector('#app');
-        const url = 'https://api.nytimes.com/svc/topstories/v2/science.json?api-key=3GhMNDKBt4LBjDHB9EV4xFZbL9xc4G0t'
+        const list = document.querySelector('.articles');
+        const dropdown = document.querySelector('select');
+        const dropdownSection = document.querySelector('.categories-dropdown-section')
         let articles = [];
 
-        function createMarkupForArticles() {
+        function createUrl(category = 'home') {
+            return 'https://api.nytimes.com/svc/topstories/vss2/' + category + '.json?api-key=3GhMNDKBt4LBjDHB9EV4xFZbL9xc4G0t';
+        }
+
+        function createMarkupForArticlesAndShowDropdown() {
             const html = articles.map(article => (
                     '<li>' + '<a target="_blank" href="' + article.url + '">' + article.title + '</a>' + '</li>'
                 )).join('');
 
-            app.innerHTML = html;
+            list.innerHTML = html;
+            toggleDropdownVisibility();
         }
 
-        async function fetchAndSaveArticles() {
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                articles = data.results;
-            } catch(error) {
-                console.error(error)
-            }
+        function fetchJSON(res) {
+            return res.ok ? res.json() : Promise.reject(res)
         }
 
-        async function call() {
-            await fetchAndSaveArticles()
-            createMarkupForArticles();
+        function saveArticles(data) {
+            articles = data.results;
         }
 
-        call();
+        function toggleDropdownVisibility() {
+            dropdownSection.style.display = articles.length !== 0 ? 'block' : 'none';
+        }
+
+        function showError(err) {
+            console.error(err);
+            list.innerHTML = '<p class="error">Sorry, something went wrong. Please refresh the site</p>';
+        }
+
+        function fetchDataAndHandleArticlesDisplay(url) {
+            fetch(url)
+                .then(fetchJSON)
+                .then(saveArticles)
+                .then(createMarkupForArticlesAndShowDropdown)
+                .catch(showError)
+        }
+
+        function fetchDataWithSelectedCategory() {
+            fetchDataAndHandleArticlesDisplay(createUrl(event.target.value))
+        }
+
+        fetchDataAndHandleArticlesDisplay(createUrl());
+
+        dropdown.addEventListener('change', fetchDataWithSelectedCategory);
 	</script>
 </body>
 </html>
