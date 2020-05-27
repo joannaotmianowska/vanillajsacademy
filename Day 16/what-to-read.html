@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>What to read today</title>
+
+	<style type="text/css">
+		body {
+			margin: 1em auto;
+			max-width: 40em;
+			width: 88%;
+		}
+	</style>
+</head>
+<body>
+
+	<h1>What to read today</h1>
+
+	<div id="app"></div>
+
+	<script>
+        const list = document.querySelector('#app');
+        const url = 'https://api.nytimes.com/svc/topstories/v2/science.json?api-key=3GhMNDKBt4LBjDHB9EV4xFZbL9xc4G0t'
+        let articles = [];
+
+        function createMarkupForArticles() {
+            const html = articles.map(article => (
+                    '<li>' + '<a target="_blank" href="' + article.url + '">' + article.title + '</a>' + '</li>'
+                )).join('');
+
+            app.innerHTML = html;
+        }
+
+        async function fetchAndSaveArticles() {
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                articles = data.results;
+            } catch(error) {
+                console.error(error)
+            }
+        }
+
+        async function call() {
+            await fetchAndSaveArticles()
+            createMarkupForArticles();
+        }
+
+        call();
+	</script>
+</body>
+</html>
