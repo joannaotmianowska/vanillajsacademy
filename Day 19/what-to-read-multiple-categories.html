@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>What to read today</title>
+
+	<style type="text/css">
+		body {
+			margin: 1em auto;
+			max-width: 40em;
+			width: 88%;
+		}
+
+        .categories-dropdown-section {
+            display: none;
+        }
+
+        .categories-dropdown {
+            text-transform: capitalize;
+        }
+
+        .error {
+            color: red;
+        }
+	</style>
+</head>
+<body>
+
+	<h1>What to read today</h1>
+
+	<div id="app">
+    </div>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default%2Cfetch"></script>
+	<script>
+        const app = document.querySelector('#app');
+        const allCategories = ['arts', 'automobiles', 'books', 'business', 'fashion', 'food', 'health', 'home',
+        'insider', 'magazine', 'movies', 'nyregion', 'obituaries', 'opinion', 'politics', 'realestate', 'science',
+        'sports', 'sundayreview', 'technology', 'theater', 't-magazine', 'travel', 'upshot', 'us', 'world'];
+        let currentCategories = [];
+        let articles = [];
+        let currentCategoriesWithFetchedArticles = [];
+
+        function createUrl(category) {
+            return 'https://api.nytimes.com/svc/topstories/v2/' + category + '.json?api-key=3GhMNDKBt4LBjDHB9EV4xFZbL9xc4G0t';
+        }
+
+        function selectAndSaveRandomCategories() {
+            let min = 0;
+            let max = allCategories.length;
+            const selectedIndexes = [];
+
+            while(selectedIndexes.length < 5) {
+                let randomIndex = Math.floor(Math.random() * (max - min)) + min;
+                if (selectedIndexes.indexOf(randomIndex) === -1) selectedIndexes.push(randomIndex);
+            }
+
+            selectedIndexes.forEach(index => {
+                currentCategories.push(allCategories[index]);
+            });
+        }
+
+        function createMarkupForArticlesAndShowDropdown() {
+            const html = articles.map(article => (
+                    '<article>' + '<a target="_blank" href="' + article.url + '">' + article.title + '</a>' + '</article>'
+                )).join('');
+
+            app.innerHTML = html;
+        }
+
+        function fetchJSON(res) {
+            return res.ok ? res.json() : Promise.reject(res)
+        }
+
+        function showError(err) {
+            console.error(err);
+            list.innerHTML = '<p class="error">Sorry, something went wrong. Please refresh the site</p>';
+        }
+
+        function saveArticles(data) {
+            articles = data.results;
+        }
+
+        function fetchDataAndHandleArticlesDisplay(url) {
+            fetch(url)
+                .then(fetchJSON)
+                .then(saveArticles)
+                .then(createMarkupForArticlesAndShowDropdown)
+                .catch(showError)
+        }
+
+        function fetchDataWithSelectedCategory() {
+            fetchDataAndHandleArticlesDisplay(createUrl(event.target.value))
+        }
+
+        fetchDataAndHandleArticlesDisplay(createUrl('opinion'));
+	</script>
+</body>
+</html>
