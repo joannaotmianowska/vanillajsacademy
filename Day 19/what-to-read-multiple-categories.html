@@ -10,13 +10,7 @@
 			width: 88%;
 		}
 
-        .categories-dropdown-section {
-            display: none;
-        }
 
-        .categories-dropdown {
-            text-transform: capitalize;
-        }
 
         .error {
             color: red;
@@ -35,6 +29,7 @@
         const allCategories = ['arts', 'automobiles', 'books', 'business', 'fashion', 'food', 'health', 'home',
         'insider', 'magazine', 'movies', 'nyregion', 'obituaries', 'opinion', 'politics', 'realestate', 'science',
         'sports', 'sundayreview', 'technology', 'theater', 't-magazine', 'travel', 'upshot', 'us', 'world'];
+        const numberOfCategories = 5;
         let currentCategories = [];
         let articles = [];
         let currentCategoriesWithFetchedArticles = [];
@@ -48,7 +43,7 @@
             let max = allCategories.length;
             const selectedIndexes = [];
 
-            while(selectedIndexes.length < 5) {
+            while(selectedIndexes.length < numberOfCategories) {
                 let randomIndex = Math.floor(Math.random() * (max - min)) + min;
                 if (selectedIndexes.indexOf(randomIndex) === -1) selectedIndexes.push(randomIndex);
             }
@@ -58,23 +53,32 @@
             });
         }
 
-        function createMarkupForCategoriesAndArticles() {
-            let html = '';
-            currentCategoriesWithFetchedArticles.forEach(category => {
-                let section = '<section>' + category.categoryName + '</section>'
-            })
+        function createMarkupForArticles(articles) {
             const html = articles.map(article => (
                     '<article>' +
-                        '<h5>' +
-                            '<a target="_blank" href="' + article.url + '">' + article.title + '</a>' +
-                        '</h5>' +
+                        '<h5>' + article.title + '</h5>' +
                         '<p>' +
-                            article.abstract +
+                            article.abstract + '... ' +
+                            '<a target="_blank" href="' + article.url + '">Read more</a>' +
                         '</p>' +
                     '</article>'
-                )).join('');
+            )).join('');
 
-            // app.innerHTML = html;
+            return html;
+        }
+
+        function createMarkupForCategories() {
+            if (currentCategoriesWithFetchedArticles.length !== numberOfCategories) return;
+
+            const html = currentCategoriesWithFetchedArticles.map(category => {
+                const articlesMarkup = createMarkupForArticles(category.articles);
+
+                return '<section>' +
+                        '<h3>' + category.categoryName + '</h3>' + articlesMarkup
+                    '</section>'
+                }).join('')
+
+            app.innerHTML = html;
         }
 
         function fetchJSON(res) {
@@ -83,7 +87,7 @@
 
         function showError(err) {
             console.error(err);
-            list.innerHTML = '<p class="error">Sorry, something went wrong. Please refresh the site</p>';
+            app.innerHTML = '<p class="error">Sorry, something went wrong. Please refresh the site</p>';
         }
 
         function saveArticles(data) {
@@ -98,7 +102,7 @@
             fetch(url)
                 .then(fetchJSON)
                 .then(saveArticles)
-                .then(createMarkupForCategoriesAndArticles)
+                .then(createMarkupForCategories)
                 .catch(showError)
         }
 
