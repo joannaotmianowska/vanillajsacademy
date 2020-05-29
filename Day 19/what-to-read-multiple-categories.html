@@ -58,12 +58,23 @@
             });
         }
 
-        function createMarkupForArticlesAndShowDropdown() {
+        function createMarkupForCategoriesAndArticles() {
+            let html = '';
+            currentCategoriesWithFetchedArticles.forEach(category => {
+                let section = '<section>' + category.categoryName + '</section>'
+            })
             const html = articles.map(article => (
-                    '<article>' + '<a target="_blank" href="' + article.url + '">' + article.title + '</a>' + '</article>'
+                    '<article>' +
+                        '<h5>' +
+                            '<a target="_blank" href="' + article.url + '">' + article.title + '</a>' +
+                        '</h5>' +
+                        '<p>' +
+                            article.abstract +
+                        '</p>' +
+                    '</article>'
                 )).join('');
 
-            app.innerHTML = html;
+            // app.innerHTML = html;
         }
 
         function fetchJSON(res) {
@@ -76,22 +87,23 @@
         }
 
         function saveArticles(data) {
-            articles = data.results;
+            const articlesObject = {
+                categoryName: data.section,
+                articles: data.results.slice(0,5)
+            };
+            currentCategoriesWithFetchedArticles.push(articlesObject);
         }
 
         function fetchDataAndHandleArticlesDisplay(url) {
             fetch(url)
                 .then(fetchJSON)
                 .then(saveArticles)
-                .then(createMarkupForArticlesAndShowDropdown)
+                .then(createMarkupForCategoriesAndArticles)
                 .catch(showError)
         }
 
-        function fetchDataWithSelectedCategory() {
-            fetchDataAndHandleArticlesDisplay(createUrl(event.target.value))
-        }
-
-        fetchDataAndHandleArticlesDisplay(createUrl('opinion'));
+        selectAndSaveRandomCategories();
+        currentCategories.forEach(category => fetchDataAndHandleArticlesDisplay(createUrl(category)));
 	</script>
 </body>
 </html>
