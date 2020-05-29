@@ -8,11 +8,29 @@
 			margin: 1em auto;
 			max-width: 40em;
 			width: 88%;
+            font-family:'Courier New', Courier, monospace;
 		}
+
+        .category {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #fcfccc;
+            border: 2px solid #eade02;
+        }
 
         .category-name {
             margin-top: 20px;
             text-transform: uppercase;
+        }
+
+        .single-article {
+            background-color:  #eade02;
+            padding: 10px;
+            margin-top: 20px;
+        }
+
+        .single-article p {
+            font-style: italic;
         }
 
         .error {
@@ -60,7 +78,7 @@
 
         function createMarkupForArticles(articles) {
             const html = articles.map(article => (
-                    '<article>' +
+                    '<article class="single-article">' +
                         '<h4>' + article.title + '</h4>' +
                         '<p>' +
                             article.abstract + '... ' +
