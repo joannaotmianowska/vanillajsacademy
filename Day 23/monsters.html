@@ -37,7 +37,7 @@
 
 	<h1>Monsters!</h1>
 
-	<div id="app"></div>
+    <div id="app"></div>
 
 	<footer>
 		<hr>
@@ -46,7 +46,7 @@
 
 	<script>
 		// The monsters and socks
-		var monsters = [
+		const monsters = [
 			'monster1',
 			'monster2',
 			'monster3',
@@ -59,7 +59,10 @@
 			'monster10',
 			'monster11',
 			'sock'
-		];
+        ];
+
+        const app = document.querySelector('#app');
+        const imagesSource = 'https://res.cloudinary.com/joannacloud/image/upload/v1591113355/monsters/';
 
         /**
          * Randomly shuffle an array
@@ -87,6 +90,42 @@
             return array;
         };
 
+        const createMarkupForMonsters = function(monsters) {
+            monsters.forEach(monster => {
+
+            });
+        }
+
+        const createMarkupCompleteMarkup = function () {
+            const row = document.createElement('div');
+            row.classList.add('row');
+
+            // monsters.forEach(monster => {
+            //     const gridTale = document.createElement('div');
+            //     gridTale.classList.add('grid');
+
+            //     const image = document.createElement('img');
+            //     image.src = `../svgs/${monster}.svg`;
+            //     image.alt = monster;
+
+            //     gridTale.appendChild(image);
+            //     row.appendChild(gridTale);
+            // });
+
+            const gridTale = document.createElement('div');
+                gridTale.classList.add('grid');
+
+                const image = document.createElement('img');
+                // image.src = `../svgs/${monsters[0]}.svg`;
+                image.src = "https://res.cloudinary.com/joannacloud/image/upload/v1591113355/monsters/sock.svg";
+                // image.alt = monsters[0];
+
+                gridTale.appendChild(image);
+                row.appendChild(gridTale);
+                app.appendChild(row)
+        }
+
+        createMarkupCompleteMarkup()
 
 
 	</script>
