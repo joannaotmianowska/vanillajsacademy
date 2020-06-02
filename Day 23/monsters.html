@@ -103,7 +103,7 @@
             return gridTale;
         }
 
-        const createMarkupCompleteMarkup = function () {
+        const createCompleteMarkup = function () {
             const row = document.createElement('div');
             row.classList.add('row');
 
@@ -116,7 +116,7 @@
 
         const shuffleMonstersArrayAnddisplayMonstersGrid = function () {
             shuffle(monsters);
-            app.appendChild(createMarkupCompleteMarkup())
+            app.appendChild(createCompleteMarkup())
         }
 
         shuffleMonstersArrayAnddisplayMonstersGrid();
