@@ -108,8 +108,7 @@
             row.classList.add('row');
 
             monsters.forEach(monster => {
-                const sigleMonsterMarkup = createMarkupForSingleMonster(monster)
-                row.appendChild(sigleMonsterMarkup);
+                row.appendChild(createMarkupForSingleMonster(monster));
             });
 
             return row;
@@ -117,8 +116,7 @@
 
         const shuffleMonstersArrayAnddisplayMonstersGrid = function () {
             shuffle(monsters);
-            const completeMarkup = createMarkupCompleteMarkup();
-            app.appendChild(completeMarkup)
+            app.appendChild(createMarkupCompleteMarkup())
         }
 
         shuffleMonstersArrayAnddisplayMonstersGrid();
