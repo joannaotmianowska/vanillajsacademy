@@ -61,9 +61,6 @@
 			'sock'
         ];
 
-        const app = document.querySelector('#app');
-        const imagesSource = 'https://res.cloudinary.com/joannacloud/image/upload/v1591113355/monsters/';
-
         /**
          * Randomly shuffle an array
          * https://stackoverflow.com/a/2450976/1293256
@@ -72,7 +69,7 @@
          */
         const shuffle = function (array) {
 
-            const currentIndex = array.length;
+            let currentIndex = array.length;
             let temporaryValue, randomIndex;
 
             // While there remain elements to shuffle...
@@ -90,10 +87,20 @@
             return array;
         };
 
-        const createMarkupForMonsters = function(monsters) {
-            monsters.forEach(monster => {
+        const app = document.querySelector('#app');
+        const imagesSource = 'https://res.cloudinary.com/joannacloud/image/upload/v1591113355/monsters/';
 
-            });
+        const createMarkupForSingleMonster = function(monster) {
+            const gridTale = document.createElement('div');
+            gridTale.classList.add('grid');
+
+            const image = document.createElement('img');
+            image.src = `${imagesSource}/${monster}.svg`;
+            image.alt = monster;
+
+            gridTale.appendChild(image);
+
+            return gridTale;
         }
 
         const createMarkupCompleteMarkup = function () {
@@ -101,35 +108,20 @@
             row.classList.add('row');
 
             monsters.forEach(monster => {
-                const gridTale = document.createElement('div');
-                gridTale.classList.add('grid');
-
-                const image = document.createElement('img');
-                image.src = `${imagesSource}/${monster}.svg`;
-                image.alt = monster;
-
-                gridTale.appendChild(image);
-                row.appendChild(gridTale);
+                const sigleMonsterMarkup = createMarkupForSingleMonster(monster)
+                row.appendChild(sigleMonsterMarkup);
             });
 
-            app.appendChild(row);
-
-            // const gridTale = document.createElement('div');
-            //     gridTale.classList.add('grid');
-
-            //     const image = document.createElement('img');
-            //     // image.src = `../svgs/${monsters[0]}.svg`;
-            //     image.src = "https://res.cloudinary.com/joannacloud/image/upload/v1591113355/monsters/sock.svg";
-            //     // image.alt = monsters[0];
-
-            //     gridTale.appendChild(image);
-            //     row.appendChild(gridTale);
-            //     app.appendChild(row)
+            return row;
         }
 
-        createMarkupCompleteMarkup()
+        const shuffleMonstersArrayAnddisplayMonstersGrid = function () {
+            shuffle(monsters);
+            const completeMarkup = createMarkupCompleteMarkup();
+            app.appendChild(completeMarkup)
+        }
 
-
+        shuffleMonstersArrayAnddisplayMonstersGrid();
 	</script>
 </body>
 </html>
