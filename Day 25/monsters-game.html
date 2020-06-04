@@ -32,6 +32,13 @@
 			max-width: 100%;
 			cursor: pointer;
 		}
+
+		button {
+			padding: 0;
+			margin: 0;
+			background: none;
+			border: none;
+		}
 	</style>
 </head>
 <body>
@@ -95,13 +102,16 @@
             const gridTale = document.createElement('div');
             gridTale.classList.add('grid', 'monster-tale');
 
+			const button = document.createElement('button');
+			button.role = 'button';
+
             const image = document.createElement('img');
 			image.setAttribute('hidden-monster', monster);
 			image.src = `${imagesSource}/door.svg`;
-            // image.src = `${imagesSource}/${monster}.svg`;
             image.alt = monster;
 
-            gridTale.appendChild(image);
+			gridTale.appendChild(button);
+            button.appendChild(image);
 
             return gridTale;
         }
@@ -133,7 +143,7 @@
 		}
 
 		const revealTheMonster = function () {
-			const image = event.target.closest('img');
+			const image = event.target.closest('[hidden-monster]');
 
 			if (!image) return;
 
@@ -145,7 +155,7 @@
 
         shuffleMonstersArrayAndDisplayMonstersGrid();
 
-		document.addEventListener('click', revealTheMonster);
+		app.addEventListener('click', revealTheMonster);
 	</script>
 </body>
 </html>
