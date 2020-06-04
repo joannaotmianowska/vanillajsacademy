@@ -30,6 +30,7 @@
 		img {
 			height: auto;
 			max-width: 100%;
+			cursor: pointer;
 		}
 	</style>
 </head>
@@ -92,10 +93,12 @@
 
         const createMarkupForSingleMonster = function(monster) {
             const gridTale = document.createElement('div');
-            gridTale.classList.add('grid');
+            gridTale.classList.add('grid', 'monster-tale');
 
             const image = document.createElement('img');
-            image.src = `${imagesSource}/${monster}.svg`;
+			image.setAttribute('hidden-monster', monster);
+			image.src = `${imagesSource}/door.svg`;
+            // image.src = `${imagesSource}/${monster}.svg`;
             image.alt = monster;
 
             gridTale.appendChild(image);
@@ -114,12 +117,35 @@
             return row;
         }
 
-        const shuffleMonstersArrayAnddisplayMonstersGrid = function () {
+        const shuffleMonstersArrayAndDisplayMonstersGrid = function () {
             shuffle(monsters);
             app.appendChild(createCompleteMarkup())
         }
 
-        shuffleMonstersArrayAnddisplayMonstersGrid();
+		const endTheGame = function() {
+			alert('Oh! It seems that you found a sock! You loose! Close this alert and play again.');
+			app.innerHTML = '';
+			shuffleMonstersArrayAndDisplayMonstersGrid();
+		}
+
+		const checkIfItsASock = function(element) {
+			if (element === 'sock') endTheGame();
+		}
+
+		const revealTheMonster = function () {
+			const image = event.target.closest('img');
+
+			if (!image) return;
+
+			const revealedMonster = image.getAttribute('hidden-monster');
+			image.src = `${imagesSource}/${revealedMonster}.svg`;
+
+			setTimeout(() => checkIfItsASock(revealedMonster), 100);
+		}
+
+        shuffleMonstersArrayAndDisplayMonstersGrid();
+
+		document.addEventListener('click', revealTheMonster);
 	</script>
 </body>
 </html>
