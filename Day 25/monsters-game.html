@@ -44,7 +44,7 @@
 <body>
 
 	<h1>Monsters!</h1>
-
+	<h2>Click on the door and try not to find a sock</h2>
     <div id="app"></div>
 
 	<footer>
@@ -100,6 +100,7 @@
 
         const createMarkupForSingleMonster = function(monster) {
             const gridTale = document.createElement('div');
+			gridTale.ariaLive = 'polite';
             gridTale.classList.add('grid', 'monster-tale');
 
 			const button = document.createElement('button');
