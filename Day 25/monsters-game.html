@@ -144,26 +144,19 @@
 		}
 
 		const revealTheMonster = function () {
-			// const image = event.target.closest('[hidden-monster]');
-
-			// if (!image) return;
-
-			// const revealedMonster = image.getAttribute('hidden-monster');
-			// image.src = `${imagesSource}/${revealedMonster}.svg`;
-
-			// setTimeout(() => checkIfItsASock(revealedMonster), 100);
-
 			const monsterTale = event.target.closest('[hidden-monster]');
 
 			if (!monsterTale) return;
 
 			const revealedMonster = monsterTale.getAttribute('hidden-monster');
 
-			// const monsterImg = document.createElement('img');
-			// monsterImg.src = `${imagesSource}/${revealedMonster}.svg`;
-			// monsterImg.alt = `This is ${revealedMonster}. Click on another door!`;
-			monsterTale.innerHTML = `<img src=${imagesSource}/${revealedMonster}.svg />`
-			// monsterTale.appendChild(monsterImg);
+			const monsterImg = document.createElement('img');
+			monsterImg.src = `${imagesSource}/${revealedMonster}.svg`;
+			monsterImg.alt = `This is ${revealedMonster}. Click on another door!`;
+			monsterTale.innerHTML = '';
+			monsterTale.appendChild(monsterImg);
+
+			setTimeout(() => checkIfItsASock(revealedMonster), 100);
 		}
 
         shuffleMonstersArrayAndDisplayMonstersGrid();
