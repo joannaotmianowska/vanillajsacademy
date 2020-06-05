@@ -102,12 +102,12 @@
             const gridTale = document.createElement('div');
 			gridTale.ariaLive = 'polite';
             gridTale.classList.add('grid', 'monster-tale');
+			gridTale.setAttribute('hidden-monster', monster);
 
 			const button = document.createElement('button');
 			button.role = 'button';
 
             const image = document.createElement('img');
-			image.setAttribute('hidden-monster', monster);
 			image.src = `${imagesSource}/door.svg`;
             image.alt = monster;
 
@@ -144,14 +144,26 @@
 		}
 
 		const revealTheMonster = function () {
-			const image = event.target.closest('[hidden-monster]');
+			// const image = event.target.closest('[hidden-monster]');
 
-			if (!image) return;
+			// if (!image) return;
 
-			const revealedMonster = image.getAttribute('hidden-monster');
-			image.src = `${imagesSource}/${revealedMonster}.svg`;
+			// const revealedMonster = image.getAttribute('hidden-monster');
+			// image.src = `${imagesSource}/${revealedMonster}.svg`;
 
-			setTimeout(() => checkIfItsASock(revealedMonster), 100);
+			// setTimeout(() => checkIfItsASock(revealedMonster), 100);
+
+			const monsterTale = event.target.closest('[hidden-monster]');
+
+			if (!monsterTale) return;
+
+			const revealedMonster = monsterTale.getAttribute('hidden-monster');
+
+			// const monsterImg = document.createElement('img');
+			// monsterImg.src = `${imagesSource}/${revealedMonster}.svg`;
+			// monsterImg.alt = `This is ${revealedMonster}. Click on another door!`;
+			monsterTale.innerHTML = `<img src=${imagesSource}/${revealedMonster}.svg />`
+			// monsterTale.appendChild(monsterImg);
 		}
 
         shuffleMonstersArrayAndDisplayMonstersGrid();
