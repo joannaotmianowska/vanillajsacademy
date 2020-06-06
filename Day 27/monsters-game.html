@@ -158,6 +158,7 @@
 			heading: 'You won!',
 			message: 'Congrats! You found all the monsters! Click on replay button and play again'
 		}
+		let foundMonsters = 0;
 
         const createMarkupForSingleMonster = function(monster) {
             const gridTale = document.createElement('div');
@@ -201,7 +202,13 @@
 		}
 
 		const checkIfItsASock = function(element) {
-			if (element === 'sock') endTheGame();
+			console.log('checking', element)
+			if (element === 'sock') {
+				console.log('lost', foundMonsters)
+			} else {
+				foundMonsters++;
+				if (foundMonsters === monsters.length-1) console.log(foundMonsters, 'won')
+			}
 		}
 
 		const showModal = function() {
