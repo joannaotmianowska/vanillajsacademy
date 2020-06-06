@@ -243,15 +243,24 @@
 		}
 
 		const showWhatIsBehindTheDoor = function () {
+			// check if door is closed and skip the rest if it is not
+			const img = event.target.closest('img');
+			if (img && img.src !== `${imagesSource}/door.svg`) return;
+
+			// find closest element with hidden-monster attribute
 			const monsterTale = event.target.closest('[hidden-monster]');
 
+			// stop the function if there is no element with hidden-monster
 			if (!monsterTale) return;
 
+			// get hidden element value & create markup for it
 			const revealedElement = monsterTale.getAttribute('hidden-monster');
 			const elementImg = createMarkupForElementImage(revealedElement);
 			monsterTale.innerHTML = '';
 			monsterTale.appendChild(elementImg);
 
+			// check if element is a sock or a monster and show modal with proper message
+			// this is in setTimeout to show element img first and then execute the function
 			setTimeout(() => checkElementAndShowModalIfNecessary(revealedElement), 100);
 		}
 
