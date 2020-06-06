@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Monsters!</title>
+
+	<style type="text/css">
+		body {
+			margin: 1em auto;
+			max-width: 40em;
+			width: 88%;
+		}
+
+		/**
+		 * A simple grid layout
+		 */
+		.row {
+			display: grid;
+			grid-template-columns: auto auto auto;
+			text-align: center;
+		}
+
+		.grid {
+			min-height: 6em;
+			padding: 1em;
+		}
+
+		/**
+		 * Make sure images scale
+		 */
+		img {
+			height: auto;
+			max-width: 100%;
+			cursor: pointer;
+		}
+
+		button {
+			padding: 0;
+			margin: 0;
+			background: none;
+			border: none;
+		}
+	</style>
+</head>
+<body>
+
+	<h1>Monsters!</h1>
+	<h2>Click on the door to reveal the monster and try not to find a sock</h2>
+    <div id="app"></div>
+
+	<footer>
+		<hr>
+		<p class="text-small text-muted">Icons by <a href="https://thenounproject.com/term/door/311732/">Jamie Dickinson</a>, <a href="https://thenounproject.com/term/monster/184225/">Nicky Knicky</a>, <a href="https://thenounproject.com/term/monster/1510400/">Alvaro Cabrera</a>, <a href="https://thenounproject.com/term/monster/28460/">Eliricon</a>, <a href="https://thenounproject.com/term/monster/82823/">April Yang</a>, <a href="https://thenounproject.com/term/monster/1062009/">tk66</a>, <a href="https://thenounproject.com/term/monster/24990/">Alex WaZa</a>, <a href="https://thenounproject.com/term/monster/37212/">Husein Aziz</a>, <a href="https://thenounproject.com/term/monster/2236082">iconcheese</a>, and <a href="https://thenounproject.com/term/socks/38451/">Yazmin Alanis</a>.</p>
+	</footer>
+
+	<script>
+		// The monsters and socks
+		const monsters = [
+			'monster1',
+			'monster2',
+			'monster3',
+			'monster4',
+			'monster5',
+			'monster6',
+			'monster7',
+			'monster8',
+			'monster9',
+			'monster10',
+			'monster11',
+			'sock'
+        ];
+
+        /**
+         * Randomly shuffle an array
+         * https://stackoverflow.com/a/2450976/1293256
+         * @param  {Array} array The array to shuffle
+         * @return {String}      The first item in the shuffled array
+         */
+        const shuffle = function (array) {
+
+            let currentIndex = array.length;
+            let temporaryValue, randomIndex;
+
+            // While there remain elements to shuffle...
+            while (0 !== currentIndex) {
+                // Pick a remaining element...
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex -= 1;
+
+                // And swap it with the current element.
+                temporaryValue = array[currentIndex];
+                array[currentIndex] = array[randomIndex];
+                array[randomIndex] = temporaryValue;
+            }
+
+            return array;
+        };
+
+        const app = document.querySelector('#app');
+        const imagesSource = 'https://res.cloudinary.com/joannacloud/image/upload/v1591113355/monsters/';
+
+        const createMarkupForSingleMonster = function(monster) {
+            const gridTale = document.createElement('div');
+			gridTale.ariaLive = 'polite';
+            gridTale.classList.add('grid', 'monster-tale');
+			gridTale.setAttribute('hidden-monster', monster);
+
+			const button = document.createElement('button');
+			button.role = 'button';
+
+            const image = document.createElement('img');
+			image.src = `${imagesSource}/door.svg`;
+            image.alt = 'This is a door. Click on it to reveal the monster';
+
+			gridTale.appendChild(button);
+            button.appendChild(image);
+
+            return gridTale;
+        }
+
+        const createCompleteMarkup = function () {
+            const row = document.createElement('div');
+            row.classList.add('row');
+
+            monsters.forEach(monster => {
+                row.appendChild(createMarkupForSingleMonster(monster));
+            });
+
+            return row;
+        }
+
+        const shuffleMonstersArrayAndDisplayMonstersGrid = function () {
+            shuffle(monsters);
+            app.appendChild(createCompleteMarkup())
+        }
+
+		const endTheGame = function() {
+			alert('Oh! It seems that you found a sock! You loose! Close this alert and play again.');
+			app.innerHTML = '';
+			shuffleMonstersArrayAndDisplayMonstersGrid();
+		}
+
+		const checkIfItsASock = function(element) {
+			if (element === 'sock') endTheGame();
+		}
+
+		const revealTheMonster = function () {
+			const monsterTale = event.target.closest('[hidden-monster]');
+
+			if (!monsterTale) return;
+
+			const revealedMonster = monsterTale.getAttribute('hidden-monster');
+
+			const monsterImg = document.createElement('img');
+			monsterImg.src = `${imagesSource}/${revealedMonster}.svg`;
+			monsterImg.alt = `This is ${revealedMonster}. Click on another door!`;
+			monsterTale.innerHTML = '';
+			monsterTale.appendChild(monsterImg);
+
+			setTimeout(() => checkIfItsASock(revealedMonster), 100);
+		}
+
+        shuffleMonstersArrayAndDisplayMonstersGrid();
+
+		app.addEventListener('click', revealTheMonster);
+	</script>
+</body>
+</html>
