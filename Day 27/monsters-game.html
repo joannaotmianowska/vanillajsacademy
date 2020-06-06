@@ -47,6 +47,7 @@
 			padding: 10px;
 			margin: 10px;
 			color: #fff;
+			font-family: inherit;
 		}
 
 		.modal-container {
@@ -57,9 +58,10 @@
 			z-index: 100;
 			top: 0;
 			left: 0;
-			display: flex;
+			display: none;
 			align-items: center;
 			justify-content: center;
+
 		}
 
 		.modal-area {
@@ -80,6 +82,7 @@
 			flex-direction: column;
 			align-items: center;
 			justify-content: center;
+			text-align: center;
 		}
 	</style>
 </head>
@@ -149,6 +152,7 @@
         const app = document.querySelector('#app');
         const imagesSource = 'https://res.cloudinary.com/joannacloud/image/upload/v1591113355/monsters/';
 		const modalSection = document.querySelector('.modal-container');
+		const modalMessage = document.querySelector('.info');
 		const replayButton = document.querySelector('.replay-button');
 		const youLostMessage = {
 			heading: 'You lost!',
@@ -179,7 +183,7 @@
             return gridTale;
         }
 
-        const createCompleteMarkup = function () {
+        const createCompleteMarkupForMonstersGrid = function () {
             const row = document.createElement('div');
             row.classList.add('row');
 
@@ -192,61 +196,78 @@
 
         const shuffleMonstersArrayAndDisplayMonstersGrid = function () {
             shuffle(monsters);
-            app.appendChild(createCompleteMarkup())
+            app.appendChild(createCompleteMarkupForMonstersGrid())
         }
 
-		const endTheGame = function() {
-			alert('Oh! It seems that you found a sock! You loose! Close this alert and play again.');
-			app.innerHTML = '';
-			shuffleMonstersArrayAndDisplayMonstersGrid();
+		const showModalSection = function() {
+			modalSection.style.position = 'absolute';
+			modalSection.style.display = 'flex';
 		}
+
+		const hideModalSection = function() {
+			modalSection.style.position = 'hidden';
+			modalSection.style.display = 'none';
+		}
+
+		const createMarkupForModal = function(outcomeMessage) {
+			modalMessage.innerHTML = `<h3>${outcomeMessage.heading}</h3><p>${outcomeMessage.message}</p>`;
+		}
+
 
 		const checkIfItsASock = function(element) {
 			console.log('checking', element)
 			if (element === 'sock') {
-				console.log('lost', foundMonsters)
+				createMarkupForModal(youLostMessage);
+				showModalSection();
 			} else {
 				foundMonsters++;
-				if (foundMonsters === monsters.length-1) console.log(foundMonsters, 'won')
+				if (foundMonsters === monsters.length-1){
+					createMarkupForModal(youWonMessage);
+					showModalSection();
+				}
 			}
 		}
 
-		const showModal = function() {
-
+		const clearGrid = function() {
+			app.innerHTML = '';
 		}
 
-		const createMarkupForYouLost = function() {
-
+		const resetFoundMonsters = function() {
+			foundMonsters = 0;
 		}
 
+		const createMarkupForElementImage = function(revealedElement) {
+			const elementImage = document.createElement('img');
+			elementImage.src = `${imagesSource}/${revealedElement}.svg`;
+			elementImage.alt = `This is ${revealedElement}. Click on another door!`;
 
-		const createMarkupForYouWon = function() {
-
+			return elementImage;
 		}
-
-		const countPoints = function() {
-
-		}
-
-		const revealTheMonster = function () {
+		const showWhatIsBehindTheDoor = function () {
 			const monsterTale = event.target.closest('[hidden-monster]');
 
 			if (!monsterTale) return;
 
-			const revealedMonster = monsterTale.getAttribute('hidden-monster');
-
-			const monsterImg = document.createElement('img');
-			monsterImg.src = `${imagesSource}/${revealedMonster}.svg`;
-			monsterImg.alt = `This is ${revealedMonster}. Click on another door!`;
+			const revealedElement = monsterTale.getAttribute('hidden-monster');
+			const elementImg = createMarkupForElementImage(revealedElement);
 			monsterTale.innerHTML = '';
-			monsterTale.appendChild(monsterImg);
+			monsterTale.appendChild(elementImg);
 
-			setTimeout(() => checkIfItsASock(revealedMonster), 100);
+			setTimeout(() => checkIfItsASock(revealedElement), 100);
+		}
+
+		const restartTheGame = function () {
+			resetFoundMonsters();
+			clearGrid();
+			hideModalSection();
+			shuffleMonstersArrayAndDisplayMonstersGrid();
 		}
 
         shuffleMonstersArrayAndDisplayMonstersGrid();
 
-		app.addEventListener('click', revealTheMonster);
+		app.addEventListener('click', showWhatIsBehindTheDoor);
+
+		replayButton.addEventListener('click', restartTheGame);
 	</script>
 </body>
 </html>
