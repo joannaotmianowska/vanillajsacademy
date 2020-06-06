@@ -8,6 +8,7 @@
 			margin: 1em auto;
 			max-width: 40em;
 			width: 88%;
+			font-family: fantasy;
 		}
 
 		/**
@@ -39,18 +40,82 @@
 			background: none;
 			border: none;
 		}
+
+		/* .main-containter {
+			position: relative;
+			z-index: 0;
+		}
+
+		.modal-container {
+			height: 100vh;
+			width: 100vw;
+			background: grey;
+			opacity: 0.8;
+			position: absolute;
+			z-index: 1;
+			top: 0;
+			left: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.modal {
+			background-color: #fff;
+			border: 1px solid red;
+			border-radius: 2em;
+			height: 50vh;
+			width: 30vw;
+			z-index: 2;
+			/* top: 2em; */
+		/* } */
+
+		.modal-container {
+			height: 100vh;
+			width: 100vw;
+			background-color: rgba(255,255,255, 0.8);
+			position: absolute;
+			z-index: 100;
+			top: 0;
+			left: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.modal-area {
+			display: grid;
+			grid-template-columns: 5% auto 5%;
+			background-color: #fff;
+			opacity: 1;
+			height: auto;
+			width: 30vw;
+			border-radius: 5px;
+			padding: 20px;
+			box-shadow: 1px 2px 5px grey;;
+		}
+
+		.modal-details {
+			grid-column: 2;
+		}
 	</style>
 </head>
 <body>
 
-	<h1>Monsters!</h1>
-	<h2>Click on the door to reveal the monster and try not to find a sock</h2>
-    <div id="app"></div>
-
-	<footer>
-		<hr>
-		<p class="text-small text-muted">Icons by <a href="https://thenounproject.com/term/door/311732/">Jamie Dickinson</a>, <a href="https://thenounproject.com/term/monster/184225/">Nicky Knicky</a>, <a href="https://thenounproject.com/term/monster/1510400/">Alvaro Cabrera</a>, <a href="https://thenounproject.com/term/monster/28460/">Eliricon</a>, <a href="https://thenounproject.com/term/monster/82823/">April Yang</a>, <a href="https://thenounproject.com/term/monster/1062009/">tk66</a>, <a href="https://thenounproject.com/term/monster/24990/">Alex WaZa</a>, <a href="https://thenounproject.com/term/monster/37212/">Husein Aziz</a>, <a href="https://thenounproject.com/term/monster/2236082">iconcheese</a>, and <a href="https://thenounproject.com/term/socks/38451/">Yazmin Alanis</a>.</p>
-	</footer>
+	<div class="main-container">
+		<h1>Monsters!</h1>
+		<h2>Click on the door to reveal the monster and try not to find a sock</h2>
+		<div id="app"></div>
+		<footer>
+			<hr>
+			<p class="text-small text-muted">Icons by <a href="https://thenounproject.com/term/door/311732/">Jamie Dickinson</a>, <a href="https://thenounproject.com/term/monster/184225/">Nicky Knicky</a>, <a href="https://thenounproject.com/term/monster/1510400/">Alvaro Cabrera</a>, <a href="https://thenounproject.com/term/monster/28460/">Eliricon</a>, <a href="https://thenounproject.com/term/monster/82823/">April Yang</a>, <a href="https://thenounproject.com/term/monster/1062009/">tk66</a>, <a href="https://thenounproject.com/term/monster/24990/">Alex WaZa</a>, <a href="https://thenounproject.com/term/monster/37212/">Husein Aziz</a>, <a href="https://thenounproject.com/term/monster/2236082">iconcheese</a>, and <a href="https://thenounproject.com/term/socks/38451/">Yazmin Alanis</a>.</p>
+		</footer>
+	</div>
+	<div class="modal-container">
+		<div class="modal-area">
+			<div class="modal-details">This is modal</div>
+		</div>
+	</div>
 
 	<script>
 		// The monsters and socks
