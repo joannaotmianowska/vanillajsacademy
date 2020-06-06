@@ -213,9 +213,7 @@
 			modalMessage.innerHTML = `<h3>${outcomeMessage.heading}</h3><p>${outcomeMessage.message}</p>`;
 		}
 
-
-		const checkIfItsASock = function(element) {
-			console.log('checking', element)
+		const checkElementAndShowModalIfNecessary = function(element) {
 			if (element === 'sock') {
 				createMarkupForModal(youLostMessage);
 				showModalSection();
@@ -243,6 +241,7 @@
 
 			return elementImage;
 		}
+
 		const showWhatIsBehindTheDoor = function () {
 			const monsterTale = event.target.closest('[hidden-monster]');
 
@@ -253,7 +252,7 @@
 			monsterTale.innerHTML = '';
 			monsterTale.appendChild(elementImg);
 
-			setTimeout(() => checkIfItsASock(revealedElement), 100);
+			setTimeout(() => checkElementAndShowModalIfNecessary(revealedElement), 100);
 		}
 
 		const restartTheGame = function () {
