@@ -9,6 +9,10 @@
 			max-width: 40em;
 			width: 88%;
 		}
+
+        li {
+            list-style: none;
+        }
 	</style>
 </head>
 <body>
@@ -96,7 +100,21 @@
 	</footer>
 
 	<script>
-		// Your code goes here...
+		const tableOfContents = document.querySelector('#table-of-contents');
+        const headings = Array.prototype.slice.call(document.querySelectorAll('h2'));
+
+        function createMarkupForTableOfContents() {
+            let list = '';
+
+            headings.forEach(heading => {
+                console.log(heading)
+                list += `<li><a href='#${heading.id}'>${heading.textContent}</a></li>`;
+            });
+
+            return list;
+        }
+
+        tableOfContents.innerHTML = createMarkupForTableOfContents();
 	</script>
 </body>
 </html>
