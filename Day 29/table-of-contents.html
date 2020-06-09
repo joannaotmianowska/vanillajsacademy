@@ -11,8 +11,12 @@
             font-family: "Courier New", Courier, monospace;
 		}
 
+		ul {
+			list-style: none;
+			padding-left: 0;
+		}
+
         li {
-            list-style: none;
             margin-bottom: 10px;
         }
 	</style>
@@ -106,17 +110,17 @@
         const headings = Array.prototype.slice.call(document.querySelectorAll('h2'));
 
         function createMarkupForTableOfContents() {
-            let list = '';
+            let items = '';
 
             headings.forEach(heading => {
-                console.log(heading)
-                list += `<li><a href='#${heading.id}'>${heading.textContent}</a></li>`;
+                items += `<li><a href='#${heading.id}'>${heading.textContent}</a></li>`;
             });
 
+			const list = `<ul>${items}</ul>`
             return list;
         }
 
-        tableOfContents.innerHTML = createMarkupForTableOfContents();
+        if (headings.length > 0) tableOfContents.innerHTML = createMarkupForTableOfContents();
 	</script>
 </body>
 </html>
