@@ -116,8 +116,7 @@
 				if (!heading.id) {
 					const newID = heading.textContent
 						.toLowerCase()
-						.replace(new RegExp(' ', 'g'), '-')
-						.replace(new RegExp("'", 'g'), '');
+						.replace(/[^a-z0-9]+/gi, '-');
 
 					heading.id = newID;
 				}
