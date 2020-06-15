@@ -8,12 +8,25 @@
 			margin: 1em auto;
 			max-width: 40em;
 			width: 88%;
-            font-family: "Courier New", Courier, monospace;
+            font-family:'Gill Sans', 'Gill Sans MT', sans-serif;
 		}
+
+        .weather-details {
+            display: flex;
+            font-size: 20px;
+        }
+
+        .weather-details span {
+           font-weight: bold;
+        }
+
+        .weather-icon {
+            margin-right: 2rem;
+        }
 	</style>
 </head>
 <body>
-    <div id="app">Checking the weather near you...</div>
+    <div id="app" aria-live="polite">Checking the weather near you...</div>
     <script>
         const locationAPIUrl = 'https://ipapi.co/json';
         const weatherAPIKey = '27813e29309a44b8af9319ea4bd92325';
@@ -52,17 +65,28 @@
         }
 
         function createMarkup() {
-            const html = `<h2>Weather in ${city}</h2>`
+            const { icon, description } = weatherDetails.iconDetails;
+
+            const html = `
+                <h1>${city}</h1>
+                <div class="weather-details">
+                    <div class="weather-icon"><img src="./icons/${icon}.png"/></div>
+                    <div>
+                        <p>Current temperature: <span>${weatherDetails.temp} &#8451</span></p>
+                        <p>Current weather: <span>${description}</span></p>
+                    </div>
+                </div>
+            `
 
             app.innerHTML = html;
         }
 
         function showError(err) {
             console.error(err);
-            app.innerHTML = '<p class="error">Sorry, something went wrong. Please refresh the site</p>';
+            app.innerHTML = '<p>Sorry, something went wrong. Please refresh the site</p>';
         }
 
-        function handleDataFetchingAndCreatingMarkup() {
+        function handleDataFetchingAndCreateMarkup() {
             fetch(locationAPIUrl)
                 .then(fetchJSON)
                 .then(saveCityAndFetchWeather)
@@ -72,6 +96,6 @@
                 .catch(showError)
         }
 
-        handleDataFetchingAndCreatingMarkup();
+        handleDataFetchingAndCreateMarkup();
     </script>
 </body>
