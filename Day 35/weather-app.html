@@ -23,39 +23,55 @@
         let city = '';
         let weatherDetails = {};
 
-        function fetchData() {
-            fetch(locationAPIUrl).then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    return Promise.reject(response);
-                }
-            }).then(data => {
-                city = data.city;
+        function fetchJSON(res) {
+            return res.ok ? res.json() : Promise.reject(res)
+        }
 
-                return fetch(`${weatherAPIUrl}?city=${city}&key=${weatherAPIKey}`)
-            }).then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    return Promise.reject(response);
-                }
-            }).then(({ data })=> {
-                const { temp, sunrise, sunset, weather } = data[0];
+        function showError(err) {
+            console.error(err);
 
-                weatherDetails = {
-                    temp,
-                    sunrise,
-                    sunset,
-                    iconDetails: weather
-                };
-            });
+            app.innerHTML = '<p class="error">Sorry, something went wrong. Please refresh the site</p>';
+        }
+
+        function saveCityAndFetchWeather(data) {
+            city = data.city;
+
+            return fetch(`${weatherAPIUrl}?city=${city}&key=${weatherAPIKey}`);
+        }
+
+        function saveWeather({ data }) {
+            console.log(data)
+            const { temp, sunrise, sunset, weather } = data[0];
+
+            weatherDetails = {
+                temp,
+                sunrise,
+                sunset,
+                iconDetails: weather
+            };
         }
 
         function createMarkup() {
+            const html = `<h2>Weather in ${city}</h2>`
 
+            app.innerHTML = html;
         }
 
-        fetchData();
+        function showError(err) {
+            console.error(err);
+            app.innerHTML = '<p class="error">Sorry, something went wrong. Please refresh the site</p>';
+        }
+
+        function handleDataFetchingAndCreatingMarkup() {
+            fetch(locationAPIUrl)
+                .then(fetchJSON)
+                .then(saveCityAndFetchWeather)
+                .then(fetchJSON)
+                .then(saveWeather)
+                .then(createMarkup)
+                .catch(showError)
+        }
+
+        handleDataFetchingAndCreatingMarkup();
     </script>
 </body>
