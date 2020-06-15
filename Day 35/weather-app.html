@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Weather App</title>
+
+	<style type="text/css">
+		body {
+			margin: 1em auto;
+			max-width: 40em;
+			width: 88%;
+            font-family: "Courier New", Courier, monospace;
+		}
+	</style>
+</head>
+<body>
+    <div id="app">Checking the weather near you...</div>
+    <script>
+        const locationAPIUrl = 'https://ipapi.co/json';
+        const weatherAPIKey = '27813e29309a44b8af9319ea4bd92325';
+        const weatherAPIUrl = `https://api.weatherbit.io/v2.0/current?city=Raleigh,NC&key=${weatherAPIKey}`;
+        const app = document.querySelector('#app');
+
+        let city;
+        let weatherDetails = {};
+
+        function fetchData() {
+            fetch(locationAPIUrl).then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    return Promise.reject(response);
+                }
+            }).then(data => {
+                city = data.city;
+                console.log(city)
+                return fetch(`https://api.weatherbit.io/v2.0/current?city=${city}&key=${weatherAPIKey}`)
+            }).then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    return Promise.reject(response);
+                }
+            }).then(data => {
+                // const { temp, sunrise, sunset, weather } = data;
+
+                // weatherDetails = {
+                //     temp,
+                //     sunrise,
+                //     sunset,
+                //     iconDetails: weather
+                // };
+
+                // console.log(weatherDetails);
+                console.log(data)
+            })
+        }
+
+        fetchData();
+    </script>
+</body>
