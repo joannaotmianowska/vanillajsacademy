@@ -17,10 +17,10 @@
     <script>
         const locationAPIUrl = 'https://ipapi.co/json';
         const weatherAPIKey = '27813e29309a44b8af9319ea4bd92325';
-        const weatherAPIUrl = `https://api.weatherbit.io/v2.0/current?city=Raleigh,NC&key=${weatherAPIKey}`;
+        const weatherAPIUrl = `https://api.weatherbit.io/v2.0/current`;
         const app = document.querySelector('#app');
 
-        let city;
+        let city = '';
         let weatherDetails = {};
 
         function fetchData() {
@@ -32,27 +32,28 @@
                 }
             }).then(data => {
                 city = data.city;
-                console.log(city)
-                return fetch(`https://api.weatherbit.io/v2.0/current?city=${city}&key=${weatherAPIKey}`)
+
+                return fetch(`${weatherAPIUrl}?city=${city}&key=${weatherAPIKey}`)
             }).then(response => {
                 if (response.ok) {
                     return response.json();
                 } else {
                     return Promise.reject(response);
                 }
-            }).then(data => {
-                // const { temp, sunrise, sunset, weather } = data;
+            }).then(({ data })=> {
+                const { temp, sunrise, sunset, weather } = data[0];
 
-                // weatherDetails = {
-                //     temp,
-                //     sunrise,
-                //     sunset,
-                //     iconDetails: weather
-                // };
+                weatherDetails = {
+                    temp,
+                    sunrise,
+                    sunset,
+                    iconDetails: weather
+                };
+            });
+        }
 
-                // console.log(weatherDetails);
-                console.log(data)
-            })
+        function createMarkup() {
+
         }
 
         fetchData();
