@@ -26,11 +26,12 @@
 	</style>
 </head>
 <body>
-    <div id="app" aria-live="polite">Checking the weather near you...</div>
+    <div id="app" aria-live="polite"></div>
     <script>
         function createCurrentWeatherWidget(options) {
             const defaults = {
                 selector: '#app',
+                textForLoading: 'Checking the weather near you...',
                 displayTextBeforeCityName: true,
                 textToBeDisplayedBeforeCityName: `Weather in `,
                 textForTemperature: 'Current temperature: ',
@@ -50,9 +51,9 @@
             let city = '';
             let weatherDetails = {};
 
-            function sanitizeMarkup(markup) {
+            function sanitizeData(data) {
                 const temp = document.createElement('div');
-                temp.textContent = markup;
+                temp.textContent = data;
                 return temp.innerHTML;
             }
 
@@ -96,7 +97,7 @@
             }
 
             function getTextBeforeCityName() {
-                return settings.displayTextBeforeCityName ? settings.textToBeDisplayedBeforeCityName : '';
+                return settings.displayTextBeforeCityName ? sanitizeData(settings.textToBeDisplayedBeforeCityName) : '';
             }
 
             function getMarkupForIcon(icon) {
@@ -109,25 +110,33 @@
                 const { icon, description } = weatherDetails.iconDetails;
 
                 const html = `
-                    <h1>${getTextBeforeCityName()} ${city}</h1>
+                    <h1>${getTextBeforeCityName()} ${sanitizeData(city)}</h1>
                     <div class="weather-details">
                         <div>${getMarkupForIcon(icon)}</div>
                         <div>
-                            <p>${settings.textForTemperature}<span>${weatherDetails.temp} ${getSymbolForTempUnit()}</span></p>
-                            <p>${settings.textForDescription}<span>${description}</span></p>
+                            <p>
+                                ${sanitizeData(settings.textForTemperature)}
+                                <span>${sanitizeData(weatherDetails.temp)} ${getSymbolForTempUnit()}</span>
+                            </p>
+                            <p>
+                                ${sanitizeData(settings.textForDescription)}
+                                <span>${sanitizeData(description)}</span>
+                            </p>
                         </>
                     </div>
                 `
 
-                app.innerHTML = html;
+                selector.innerHTML = html;
             }
 
             function showError(err) {
                 console.error(err);
-                app.innerHTML = '<p>Sorry, something went wrong. Please refresh the site</p>';
+                selector.innerHTML = '<p>Sorry, something went wrong. Please refresh the site</p>';
             }
 
             function handleDataFetchingAndCreateMarkup() {
+                selector.textContent = settings.textForLoading;
+
                 fetch(locationAPIUrl)
                     .then(fetchJSON)
                     .then(saveCityAndFetchWeather)
@@ -140,16 +149,6 @@
             handleDataFetchingAndCreateMarkup();
         }
 
-        createCurrentWeatherWidget({});
-        /*TO DO:
-        - add option to change C to F DONE
-        - change icons to be fetched server DONE
-        - change text to be one liner DONE
-        - allow selecting target tag
-        - disable/enable icon
-        - allow selecting final text (satinize)
-        - sanitize all fetched data
-        - remove to do list from the file
-        */
+        createCurrentWeatherWidget();
     </script>
 </body>
