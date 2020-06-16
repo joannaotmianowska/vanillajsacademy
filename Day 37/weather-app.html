@@ -35,26 +35,10 @@
 
         let city = '';
         let weatherDetails = {};
-
-        function convertCelsiusToFarenheit(celsius) {
-            return (celsius * 9 / 5) + 32;
-        }
+        let unit = 'cel';
 
         function changeTempUnitInWeatherDetails(unit='cel') {
-            const currentUnit = weatherDetails.tempUnit;
-            const currentTemp = weatherDetails.temp;
-            let newTemp = 0;
 
-            if (currentUnit === unit) return;
-
-            if (currentUnit === 'cel' && unit === 'far') {
-                weatherDetails = {
-                    temp: (currentTemp * 9 / 5) + 32,
-                    unit,
-                    ...weatherDetails
-                }
-
-            }
         }
 
         function fetchJSON(res) {
@@ -70,17 +54,21 @@
         function saveCityAndFetchWeather(data) {
             city = data.city;
 
-            return fetch(`${weatherAPIUrl}?city=${city}&key=${weatherAPIKey}`);
+            return fetch(`${weatherAPIUrl}?city=${city}&units=M&key=${weatherAPIKey}`);
         }
 
         function saveWeather({ data }) {
             const { temp, weather } = data[0];
+            console.log(data)
 
             weatherDetails = {
                 temp,
-                tempUnit: 'cel',
                 iconDetails: weather
             };
+        }
+
+        function getSymbolForTempUnit() {
+            return unit === 'cel' ? '&#8451' : '&#176';
         }
 
         function createMarkup() {
@@ -91,7 +79,7 @@
                 <div class="weather-details">
                     <div class="weather-icon"><img src="https://www.weatherbit.io/static/img/icons/${icon}.png"/></div>
                     <div>
-                        <p>Current temperature: <span>${weatherDetails.temp} &#8451</span></p>
+                        <p>Current temperature: <span>${weatherDetails.temp} ${getSymbolForTempUnit()}</span></p>
                         <p>Current weather: <span>${description}</span></p>
                     </div>
                 </div>
@@ -118,7 +106,7 @@
         handleDataFetchingAndCreateMarkup();
 
         /*TO DO:
-        - add option to change C to F
+        - add option to change C to F DONE
         - change icons to be fetched server DONE
         - change text to be one liner
         - allow selecting target tag
