@@ -36,6 +36,27 @@
         let city = '';
         let weatherDetails = {};
 
+        function convertCelsiusToFarenheit(celsius) {
+            return (celsius * 9 / 5) + 32;
+        }
+
+        function changeTempUnitInWeatherDetails(unit='cel') {
+            const currentUnit = weatherDetails.tempUnit;
+            const currentTemp = weatherDetails.temp;
+            let newTemp = 0;
+
+            if (currentUnit === unit) return;
+
+            if (currentUnit === 'cel' && unit === 'far') {
+                weatherDetails = {
+                    temp: (currentTemp * 9 / 5) + 32,
+                    unit,
+                    ...weatherDetails
+                }
+
+            }
+        }
+
         function fetchJSON(res) {
             return res.ok ? res.json() : Promise.reject(res)
         }
@@ -53,12 +74,11 @@
         }
 
         function saveWeather({ data }) {
-            const { temp, sunrise, sunset, weather } = data[0];
+            const { temp, weather } = data[0];
 
             weatherDetails = {
                 temp,
-                sunrise,
-                sunset,
+                tempUnit: 'cel',
                 iconDetails: weather
             };
         }
