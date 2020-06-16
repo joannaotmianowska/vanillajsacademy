@@ -45,10 +45,16 @@
             const locationAPIUrl = 'https://ipapi.co/json';
             const weatherAPIKey = '27813e29309a44b8af9319ea4bd92325';
             const weatherAPIUrl = `https://api.weatherbit.io/v2.0/current`;
-            const app = document.querySelector(settings.selector);
+            const selector = document.querySelector(settings.selector);
 
             let city = '';
             let weatherDetails = {};
+
+            function sanitizeMarkup(markup) {
+                const temp = document.createElement('div');
+                temp.textContent = markup;
+                return temp.innerHTML;
+            }
 
             function fetchJSON(res) {
                 return res.ok ? res.json() : Promise.reject(res)
@@ -57,13 +63,23 @@
             function showError(err) {
                 console.error(err);
 
-                app.innerHTML = '<p class="error">Sorry, something went wrong. Please refresh the site</p>';
+                selector.innerHTML = '<p class="error">Sorry, something went wrong. Please refresh the site</p>';
+            }
+
+            function getUnitsForAPICall() {
+                const { units } = settings;
+
+                if (units === 'cel') {
+                    return 'M'
+                } else if (units === 'far') {
+                    return 'I';
+                }
             }
 
             function saveCityAndFetchWeather(data) {
                 city = data.city;
 
-                return fetch(`${weatherAPIUrl}?city=${city}&units=M&key=${weatherAPIKey}`);
+                return fetch(`${weatherAPIUrl}?city=${city}&units=${getUnitsForAPICall()}&key=${weatherAPIKey}`);
             }
 
             function saveWeather({ data }) {
@@ -124,7 +140,7 @@
             handleDataFetchingAndCreateMarkup();
         }
 
-        createCurrentWeatherWidget({displayTextBeforeCityName: true});
+        createCurrentWeatherWidget({});
         /*TO DO:
         - add option to change C to F DONE
         - change icons to be fetched server DONE
