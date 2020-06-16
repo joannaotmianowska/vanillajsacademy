@@ -29,29 +29,26 @@
     <div id="app" aria-live="polite">Checking the weather near you...</div>
     <script>
         function createCurrentWeatherWidget(options) {
-            let city = '';
-            let weatherDetails = {};
-            let units = 'cel';
-
             const defaults = {
                 selector: '#app',
                 displayTextBeforeCityName: true,
-                textToBeDisplayedBeforeCityName: `Current weather in `,
-                textForDisplayingTemperature: 'Current temperature: ',
-                textForDisplayingDescription: 'Current weather: ',
-                icon: true,
+                textToBeDisplayedBeforeCityName: `Weather in `,
+                textForTemperature: 'Current temperature: ',
+                textForDescription: 'Current weather: ',
+                displayIcon: true,
                 units: 'cel'
             }
 
             const settings = Object.assign(defaults, options);
+            console.log(settings)
 
             const locationAPIUrl = 'https://ipapi.co/json';
             const weatherAPIKey = '27813e29309a44b8af9319ea4bd92325';
             const weatherAPIUrl = `https://api.weatherbit.io/v2.0/current`;
-            const app = document.querySelector('#app');
+            const app = document.querySelector(settings.selector);
 
-
-            console.log(settings)
+            let city = '';
+            let weatherDetails = {};
 
             function fetchJSON(res) {
                 return res.ok ? res.json() : Promise.reject(res)
@@ -71,7 +68,6 @@
 
             function saveWeather({ data }) {
                 const { temp, weather } = data[0];
-                console.log(data)
 
                 weatherDetails = {
                     temp,
@@ -80,20 +76,30 @@
             }
 
             function getSymbolForTempUnit() {
-                return units === 'cel' ? '&#8451' : '&#176';
+                return settings.units === 'cel' ? '&#8451' : '&#176';
             }
 
-            function createMarkup() {
+            function getTextBeforeCityName() {
+                return settings.displayTextBeforeCityName ? settings.textToBeDisplayedBeforeCityName : '';
+            }
+
+            function getMarkupForIcon(icon) {
+                return  settings.displayIcon
+                    ? `<img src="https://www.weatherbit.io/static/img/icons/${icon}.png"/>`
+                    : '';
+            }
+
+            function createCompleteMarkup() {
                 const { icon, description } = weatherDetails.iconDetails;
 
                 const html = `
-                    <h1>Weather in ${city}</h1>
+                    <h1>${getTextBeforeCityName()} ${city}</h1>
                     <div class="weather-details">
-                        <div class="weather-icon"><img src="https://www.weatherbit.io/static/img/icons/${icon}.png"/></div>
+                        <div>${getMarkupForIcon(icon)}</div>
                         <div>
-                            <p>Current temperature: <span>${weatherDetails.temp} ${getSymbolForTempUnit()}</span></p>
-                            <p>Current weather: <span>${description}</span></p>
-                        </div>
+                            <p>${settings.textForTemperature}<span>${weatherDetails.temp} ${getSymbolForTempUnit()}</span></p>
+                            <p>${settings.textForDescription}<span>${description}</span></p>
+                        </>
                     </div>
                 `
 
@@ -111,14 +117,14 @@
                     .then(saveCityAndFetchWeather)
                     .then(fetchJSON)
                     .then(saveWeather)
-                    .then(createMarkup)
+                    .then(createCompleteMarkup)
                     .catch(showError)
             }
 
-            handleDataFetchingAndCreateMarkup({textBeforeCityName: ''});
+            handleDataFetchingAndCreateMarkup();
         }
 
-        createCurrentWeatherWidget();
+        createCurrentWeatherWidget({displayTextBeforeCityName: true});
         /*TO DO:
         - add option to change C to F DONE
         - change icons to be fetched server DONE
