@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Weather App</title>
+
+	<style type="text/css">
+		body {
+			margin: 1em auto;
+			max-width: 40em;
+			width: 88%;
+            font-family:'Gill Sans', 'Gill Sans MT', sans-serif;
+		}
+
+        .weather-details {
+            display: flex;
+            font-size: 20px;
+        }
+
+        .weather-details span {
+           font-weight: bold;
+        }
+
+        .weather-icon {
+            margin-right: 2rem;
+        }
+	</style>
+</head>
+<body>
+    <div id="app" aria-live="polite">Checking the weather near you...</div>
+    <script>
+        const locationAPIUrl = 'https://ipapi.co/json';
+        const weatherAPIKey = '27813e29309a44b8af9319ea4bd92325';
+        const weatherAPIUrl = `https://api.weatherbit.io/v2.0/current`;
+        const app = document.querySelector('#app');
+
+        let city = '';
+        let weatherDetails = {};
+
+        function fetchJSON(res) {
+            return res.ok ? res.json() : Promise.reject(res)
+        }
+
+        function showError(err) {
+            console.error(err);
+
+            app.innerHTML = '<p class="error">Sorry, something went wrong. Please refresh the site</p>';
+        }
+
+        function saveCityAndFetchWeather(data) {
+            city = data.city;
+
+            return fetch(`${weatherAPIUrl}?city=${city}&key=${weatherAPIKey}`);
+        }
+
+        function saveWeather({ data }) {
+            const { temp, sunrise, sunset, weather } = data[0];
+
+            weatherDetails = {
+                temp,
+                sunrise,
+                sunset,
+                iconDetails: weather
+            };
+        }
+
+        function createMarkup() {
+            const { icon, description } = weatherDetails.iconDetails;
+
+            const html = `
+                <h1>${city}</h1>
+                <div class="weather-details">
+                    <div class="weather-icon"><img src="./icons/${icon}.png"/></div>
+                    <div>
+                        <p>Current temperature: <span>${weatherDetails.temp} &#8451</span></p>
+                        <p>Current weather: <span>${description}</span></p>
+                    </div>
+                </div>
+            `
+
+            app.innerHTML = html;
+        }
+
+        function showError(err) {
+            console.error(err);
+            app.innerHTML = '<p>Sorry, something went wrong. Please refresh the site</p>';
+        }
+
+        function handleDataFetchingAndCreateMarkup() {
+            fetch(locationAPIUrl)
+                .then(fetchJSON)
+                .then(saveCityAndFetchWeather)
+                .then(fetchJSON)
+                .then(saveWeather)
+                .then(createMarkup)
+                .catch(showError)
+        }
+
+        handleDataFetchingAndCreateMarkup();
+
+        /*TO DO:
+        - add option to change C to F
+        - change icons to be fetched server
+        - change text to be one liner
+        - allow selecting target tag
+        - disable/enable icon
+        - allow selecting final text (satinize)
+        - sanitize all fetched data
+        */
+    </script>
+</body>
