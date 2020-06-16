@@ -69,7 +69,7 @@
             const html = `
                 <h1>${city}</h1>
                 <div class="weather-details">
-                    <div class="weather-icon"><img src="./icons/${icon}.png"/></div>
+                    <div class="weather-icon"><img src="https://www.weatherbit.io/static/img/icons/${icon}.png"/></div>
                     <div>
                         <p>Current temperature: <span>${weatherDetails.temp} &#8451</span></p>
                         <p>Current weather: <span>${description}</span></p>
@@ -99,12 +99,13 @@
 
         /*TO DO:
         - add option to change C to F
-        - change icons to be fetched server
+        - change icons to be fetched server DONE
         - change text to be one liner
         - allow selecting target tag
         - disable/enable icon
         - allow selecting final text (satinize)
         - sanitize all fetched data
+        - remove to do list from the file
         */
     </script>
 </body>
