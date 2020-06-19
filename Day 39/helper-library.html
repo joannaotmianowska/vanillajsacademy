@@ -35,13 +35,13 @@
 
 	<script>
         /*
-            Create a helper library with public methods you can use to…
+            TO DO: Create a helper library with public methods you can use to:
 
-            Convert a NodeList to an array.
-            Get the first matching element in the DOM.
-            Get all matching elements in the DOM as an array.
-            Add a class to all elements in an array.
-            Remove a class from all elements in an array.
+            - convert a NodeList to an array.
+            - get the first matching element in the DOM.
+            - get all matching elements in the DOM as an array.
+            - add a class to all elements in an array.
+            - remove a class from all elements in an array.
         */
 
         const helper = (function () {
@@ -87,20 +87,48 @@
                 return queryAllElBySelectorAndSaveAsArray(selector);
             };
 
-            methods.addClassToAllArrayElements = function(array) {
+            /**
+             * Add CSS class to all elements in given array
+             * @param  {Array} Array of elements that should have new class
+             * @param {String} class that will be added to elements
+             */
+            methods.addClassToAllElementsInArray = function(array, className) {
+                array.forEach(el => {
+                    el.classList.add(className);
+                });
+            }
 
+
+            /**
+             * Remove CSS class from all elements in given array
+             * @param  {Array} Array of elements that should have class removed
+             * @param {String} class that will be removed from elements
+             */
+             methods.removeClassFromAllElementsInArray = function(array, className) {
+                array.forEach(el => {
+                    el.classList.remove(className);
+                });
             }
 
             return methods;
 
         })();
 
-        // Example
+        // Examples of usage
         const button = helper.getFirstMatchingElementBySelector('button');
         const buttonsArray = helper.getArrayOfAllMatchingElementsBySelector('button');
-        console.log(typeof(button))
-        console.log(buttonsArray)
+        console.log(typeof(button));
+        console.log(buttonsArray);
 
+        const examplaryNodeList = document.querySelectorAll('button');
+        const arrayFromNodeList = helper.getArrayFromNodeList(examplaryNodeList);
+        console.log(arrayFromNodeList);
+
+        helper.addClassToAllElementsInArray(buttonsArray, 'btn-purple');
+        console.log(buttonsArray[0].classList);
+
+        helper.removeClassFromAllElementsInArray(buttonsArray, 'btn-purple');
+        console.log(buttonsArray[0].classList);
 	</script>
 </body>
 </html>
