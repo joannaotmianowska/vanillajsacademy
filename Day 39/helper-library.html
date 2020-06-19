@@ -34,13 +34,15 @@
 	</p>
 
 	<script>
-        /*Create a helper library with public methods you can use to…
+        /*
+            Create a helper library with public methods you can use to…
 
-        Convert a NodeList to an array.
-        Get the first matching element in the DOM.
-        Get all matching elements in the DOM as an array.
-        Add a class to all elements in an array.
-        Remove a class from all elements in an array.*/
+            Convert a NodeList to an array.
+            Get the first matching element in the DOM.
+            Get all matching elements in the DOM as an array.
+            Add a class to all elements in an array.
+            Remove a class from all elements in an array.
+        */
 
         const helper = (function () {
 
@@ -58,25 +60,46 @@
                 return convertNodeListToArray(document.querySelectorAll(selector));
             }
 
+            /**
+             * Convert node list into an array
+             * @param  {NodeList} NodeList that has to be converted into Array
+             * @return {Array} Array of NodeList elements
+             */
             methods.getArrayFromNodeList = function(nodeList) {
                 return convertNodeListToArray(nodeList);
             }
 
+            /**
+             * Get first element that matches given CSS selector
+             * @param  {String} selector
+             * @return {Object} Object matching given selector
+             */
             methods.getFirstMatchingElementBySelector = function (selector) {
                 return queryFirstElBySelector(selector);
             };
 
+            /**
+             * Get all elements that match given CSS selector and save them into array
+             * @param  {String} selector
+             * @return {Array} Array of elements matching given selector
+             */
             methods.getArrayOfAllMatchingElementsBySelector = function (selector) {
                 return queryAllElBySelectorAndSaveAsArray(selector);
             };
+
+            methods.addClassToAllArrayElements = function(array) {
+
+            }
 
             return methods;
 
         })();
 
-        const abc = helper.getFirstMatchingElementBySelector('button');
-        const cde = helper.getArrayOfAllMatchingElementsBySelector('button');
-        console.log(cde)
+        // Example
+        const button = helper.getFirstMatchingElementBySelector('button');
+        const buttonsArray = helper.getArrayOfAllMatchingElementsBySelector('button');
+        console.log(typeof(button))
+        console.log(buttonsArray)
 
 	</script>
 </body>
