@@ -93,11 +93,8 @@
              * @param {String} class that will be added to elements
              */
             methods.addClassToAllElementsInArray = function(array, className) {
-                array.forEach(el => {
-                    el.classList.add(className);
-                });
+                array.forEach(el => { el.classList.add(className) });
             }
-
 
             /**
              * Remove CSS class from all elements in given array
@@ -105,9 +102,7 @@
              * @param {String} class that will be removed from elements
              */
              methods.removeClassFromAllElementsInArray = function(array, className) {
-                array.forEach(el => {
-                    el.classList.remove(className);
-                });
+                array.forEach(el => { el.classList.remove(className) });
             }
 
             return methods;
