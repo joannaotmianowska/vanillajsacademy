@@ -44,10 +44,40 @@
 
         const helper = (function () {
 
-        // Holds our public methods
-        const methods = {};
+            const methods = {};
+
+            const convertNodeListToArray = function(nodeList) {
+                return Array.prototype.slice.call(nodeList);
+            }
+
+            const queryFirstElBySelector = function(selector) {
+                return document.querySelector(selector);
+            }
+
+            const queryAllElBySelectorAndSaveAsArray = function(selector) {
+                return convertNodeListToArray(document.querySelectorAll(selector));
+            }
+
+            methods.getArrayFromNodeList = function(nodeList) {
+                return convertNodeListToArray(nodeList);
+            }
+
+            methods.getFirstMatchingElementBySelector = function (selector) {
+                return queryFirstElBySelector(selector);
+            };
+
+            methods.getArrayOfAllMatchingElementsBySelector = function (selector) {
+                return queryAllElBySelectorAndSaveAsArray(selector);
+            };
+
+            return methods;
 
         })();
+
+        const abc = helper.getFirstMatchingElementBySelector('button');
+        const cde = helper.getArrayOfAllMatchingElementsBySelector('button');
+        console.log(cde)
+
 	</script>
 </body>
 </html>
