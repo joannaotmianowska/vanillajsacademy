@@ -65,16 +65,19 @@
                 return document.querySelector(this.selector);
             }
 
+            // Returns last element that matches selector given when initializing the library
             Constructor.prototype.getLast = function() {
                 const allElements = document.querySelectorAll(this.selector);
                 return allElements[allElements.length - 1];
             }
 
+            // Adds CSS class that was given when initializing the library to all matching elements
             Constructor.prototype.addClass = function() {
                 const elements = this.getArray();
                 elements.forEach(el => { el.classList.add(this.className) });
             }
 
+            // Removes CSS class that was given when initializing the library from all matching elements
             Constructor.prototype.removeClass = function() {
                 const elements = this.getArray();
                 elements.forEach(el => { el.classList.remove(this.className) });
