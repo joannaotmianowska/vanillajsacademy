@@ -41,7 +41,67 @@
 	</ul>
 
 	<script>
-		// Your code goes here...
+        /*
+        Create a DOM manipulation library with public methods you can use to…
+
+        Get an array of items from the DOM.
+        Get the first and last matching items from the DOM.
+        Add and remove a class to all matching elements.
+        */
+
+        const DOMElements =  (function() {
+            const Constructor = function(selector, className) {
+                this.selector = selector;
+                this.className = className;
+            }
+
+            // Returns an array of all elements matching selector given when initializing the library
+            Constructor.prototype.getArray = function() {
+                return Array.prototype.slice.call(document.querySelectorAll(this.selector))
+            }
+
+            // Returns first element that matches selector given when initializing the library
+            Constructor.prototype.getFirst = function() {
+                return document.querySelector(this.selector);
+            }
+
+            Constructor.prototype.getLast = function() {
+                const allElements = document.querySelectorAll(this.selector);
+                return allElements[allElements.length - 1];
+            }
+
+            Constructor.prototype.addClass = function() {
+                const elements = this.getArray();
+                elements.forEach(el => { el.classList.add(this.className) });
+            }
+
+            Constructor.prototype.removeClass = function() {
+                const elements = this.getArray();
+                elements.forEach(el => { el.classList.remove(this.className) });
+            }
+
+            return Constructor;
+        })();
+
+        // Testing
+
+        const buttons = new DOMElements('button', 'btn-purple');
+        console.log(buttons);
+
+        const buttonsArray = buttons.getArray();
+        console.log(buttonsArray);
+
+        const firstButton = buttons.getFirst();
+        console.log(firstButton);
+
+        const lastButton = buttons.getLast();
+        console.log(lastButton);
+
+        buttons.addClass();
+        console.log(firstButton.classList);
+
+        buttons.removeClass();
+        console.log(firstButton.classList);
 	</script>
 </body>
 </html>
