@@ -49,7 +49,7 @@
         Add and remove a class to all matching elements.
         */
 
-        const DOMElements =  (function() {
+        const Elements =  (function() {
             const Constructor = function(selector, className) {
                 this.selector = selector;
                 this.className = className;
@@ -88,7 +88,7 @@
 
         // Testing
 
-        const buttons = new DOMElements('button', 'btn-purple');
+        const buttons = new Elements('button', 'btn-purple');
         console.log(buttons);
 
         const buttonsArray = buttons.getArray();
