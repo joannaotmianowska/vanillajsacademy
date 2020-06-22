@@ -50,8 +50,13 @@
         */
 
         const Elements =  (function() {
+            const checkIfNodesExists = function(nodes) {
+                if (!nodes || nodes.length < 1) return null;
+                return nodes;
+            }
+
             const Constructor = function(selector, className) {
-                this.elements = document.querySelectorAll(selector);
+                this.elements = checkIfNodesExists(document.querySelectorAll(selector));
                 this.className = className;
             }
 
