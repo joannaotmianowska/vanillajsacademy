@@ -51,24 +51,23 @@
 
         const Elements =  (function() {
             const Constructor = function(selector, className) {
-                this.selector = selector;
+                this.elements = document.querySelectorAll(selector);
                 this.className = className;
             }
 
             // Returns an array of all elements matching selector given when initializing the library
             Constructor.prototype.getArray = function() {
-                return Array.prototype.slice.call(document.querySelectorAll(this.selector))
+                return Array.prototype.slice.call(this.elements);
             }
 
             // Returns first element that matches selector given when initializing the library
             Constructor.prototype.getFirst = function() {
-                return document.querySelector(this.selector);
+                return this.elements[0];
             }
 
             // Returns last element that matches selector given when initializing the library
             Constructor.prototype.getLast = function() {
-                const allElements = document.querySelectorAll(this.selector);
-                return allElements[allElements.length - 1];
+                return this.elements[this.elements.length - 1];
             }
 
             // Adds CSS class that was given when initializing the library to all matching elements
