@@ -20,6 +20,10 @@
 			background-color: rebeccapurple;
 			color: #ffffff;
 		}
+
+        .green-border {
+            border: 1px solid green;
+        }
 	</style>
 </head>
 <body>
@@ -55,9 +59,8 @@
                 return nodes;
             }
 
-            const Constructor = function(selector, className) {
+            const Constructor = function(selector) {
                 this.elements = checkIfNodesExists(document.querySelectorAll(selector));
-                this.className = className;
             }
 
             // Returns an array of all elements matching selector given when initializing the library
@@ -75,16 +78,18 @@
                 return this.elements[this.elements.length - 1];
             }
 
-            // Adds CSS class that was given when initializing the library to all matching elements
-            Constructor.prototype.addClass = function() {
+            // Adds given CSS class to all matching elements
+            Constructor.prototype.addClass = function(className) {
                 const elements = this.getArray();
-                elements.forEach(el => { el.classList.add(this.className) });
+                elements.forEach(el => { el.classList.add(className) });
+                return this;
             }
 
-            // Removes CSS class that was given when initializing the library from all matching elements
-            Constructor.prototype.removeClass = function() {
+            // Removes given CSS class from all matching elements
+            Constructor.prototype.removeClass = function(className) {
                 const elements = this.getArray();
-                elements.forEach(el => { el.classList.remove(this.className) });
+                elements.forEach(el => { el.classList.remove(className) });
+                return this;
             }
 
             return Constructor;
@@ -104,10 +109,7 @@
         const lastButton = buttons.getLast();
         console.log(lastButton);
 
-        buttons.addClass();
-        console.log(firstButton.classList);
-
-        buttons.removeClass();
+        buttons.removeClass('btn-blue').addClass('green-border');
         console.log(firstButton.classList);
 	</script>
 </body>
