@@ -180,12 +180,10 @@
 		 * @param  {Event} event The event object
 		 */
 		var clickHandler = function (event) {
-			console.log('click')
 			// If a "play again" button was clicked, reset the UI and end the callback function
 			// if (event.target.hasAttribute('[data-monster-play-again]')) {
 			// @bug2 it should be attribute name, [] are redundant
 			if (event.target.hasAttribute('data-monster-play-again')) {
-				console.log('has play again attr')
 				renderMonsters();
 				return;
 			}
@@ -196,12 +194,10 @@
 			// var monster = event.target.closest('data-monster-id');
 			// @bug3 it should be selector that contains 'data-monster-id' not exactly this selector, [] are missing
 			var monster = event.target.closest('[data-monster-id]');
-			console.log(monster)
 			if (!monster) return;
 
 			// Get the monster's index in the array
 			var id = monster.getAttribute('data-monster-id');
-			console.log(id)
 
 			// If the door reveals a sock, render the lost UI
 			// Then, end the callback function
