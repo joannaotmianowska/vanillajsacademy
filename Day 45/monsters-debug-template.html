@@ -123,7 +123,9 @@
 		 */
 		var renderMonsters = function () {
 			// Reset the number of monsters who have been found
-			// found = 0; @bug1 - variable that stores number of found monsters is called 'count'
+			// found = 0;
+			// @bug1 - variable that stores number of found monsters is called 'count'
+			// 'found' was global varible created here, this is why code worked
 			count = 0;
 
 			// Shuffle the monsters array
@@ -180,7 +182,10 @@
 		var clickHandler = function (event) {
 			console.log('click')
 			// If a "play again" button was clicked, reset the UI and end the callback function
-			if (event.target.hasAttribute('[data-monster-play-again]')) {
+			// if (event.target.hasAttribute('[data-monster-play-again]')) {
+			// @bug2 it should be attribute name, [] are redundant
+			if (event.target.hasAttribute('data-monster-play-again')) {
+				console.log('has play again attr')
 				renderMonsters();
 				return;
 			}
@@ -189,7 +194,7 @@
 			// If not, it's not a monster
 			// return and stop running our callback function
 			// var monster = event.target.closest('data-monster-id');
-			// @bug it should be selector that contains 'data-monster-id' not exactly this selector, [] are missing
+			// @bug3 it should be selector that contains 'data-monster-id' not exactly this selector, [] are missing
 			var monster = event.target.closest('[data-monster-id]');
 			console.log(monster)
 			if (!monster) return;
@@ -201,9 +206,9 @@
 			// If the door reveals a sock, render the lost UI
 			// Then, end the callback function
 			// if (monsters[id] = 'socks') {
-			// @bug = instead of ===
-			if (monsters[id] === 'socks') {
-				console.log(monsters[id])
+			// @bug4 = instead of ===
+			// @bug5 'sock' instead of 'socks'
+			if (monsters[id] === 'sock') {
 				renderLost();
 				return;
 			}
