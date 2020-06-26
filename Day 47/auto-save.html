@@ -52,7 +52,30 @@
 	</form>
 
 	<script>
-		// Your code goes here...
+        const userInputs = Array.prototype.slice.call(document.querySelectorAll('.save-me [id]'));
+
+        userInputs.forEach(input => {
+            const savedData = localStorage.getItem(input.id);
+
+            if (savedData) {
+                input.value = savedData;
+            }
+        });
+
+        const saveUserInputValue = function() {
+            const userInput = event.target.closest('.save-me [id]');
+
+            localStorage.setItem(userInput.id, userInput.value);
+        }
+
+		document.addEventListener('keyup', saveUserInputValue)
+
+        // TO DO
+        /* save value to local storage
+        check if there is value saved for specific field
+        display value if it exists
+        clear value when form is submitted
+        */
 	</script>
 </body>
 </html>
