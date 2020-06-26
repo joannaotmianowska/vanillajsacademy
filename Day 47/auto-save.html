@@ -53,6 +53,7 @@
 
 	<script>
         const userInputs = Array.prototype.slice.call(document.querySelectorAll('.save-me [id]'));
+        const submitButton = document.querySelector('[type=submit]');
 
         userInputs.forEach(input => {
             const savedData = localStorage.getItem(input.id);
@@ -68,14 +69,8 @@
             localStorage.setItem(userInput.id, userInput.value);
         }
 
-		document.addEventListener('keyup', saveUserInputValue)
-
-        // TO DO
-        /* save value to local storage
-        check if there is value saved for specific field
-        display value if it exists
-        clear value when form is submitted
-        */
+		document.addEventListener('keyup', saveUserInputValue);
+        submitButton.addEventListener('click', () => localStorage.clear());
 	</script>
 </body>
 </html>
