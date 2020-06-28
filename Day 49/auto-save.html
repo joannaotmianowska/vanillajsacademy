@@ -52,37 +52,38 @@
 	</form>
 
 	<script>
-        const userInputs = Array.prototype.slice.call(document.querySelectorAll('.save-me [id]'));
-		const submitButton = document.querySelector('[type=submit]');
-		let formValues = JSON.parse(localStorage.getItem('formValues')) || {};
+        (function() {
+			const userInputs = Array.prototype.slice.call(document.querySelectorAll('.save-me [id]'));
+			const submitButton = document.querySelector('[type=submit]');
+			let formValues = JSON.parse(localStorage.getItem('formValues')) || {};
 
-		const setFormValuesFromLocalStorage = function() {
-			const savedData = formValues;
+			const setFormValuesFromLocalStorage = function() {
+				const savedData = formValues;
+				if (!savedData) return;
 
-			if (!savedData) return;
+				userInputs.forEach(input => {
+					const id = savedData[input.id];
+					if (!id) return;
 
-			userInputs.forEach(input => {
-				const id = savedData[input.id];
-				if (!id) return;
-
-				input.value = savedData[input.id];
-			});
-		}
-
-        const saveUserInputValue = function() {
-			const userInput = event.target.closest('.save-me [id]');
-
-			formValues = {
-				...formValues,
-				[userInput.id]: userInput.value
+					input.value = savedData[input.id];
+				});
 			}
 
-            localStorage.setItem('formValues', JSON.stringify(formValues));
-        }
+			const saveUserInputValue = function() {
+				const userInput = event.target.closest('.save-me [id]');
 
-		setFormValuesFromLocalStorage();
-		document.addEventListener('keyup', saveUserInputValue);
-        submitButton.addEventListener('click', () => localStorage.removeItem('formValues'));
+				formValues = {
+					...formValues,
+					[userInput.id]: userInput.value
+				}
+
+				localStorage.setItem('formValues', JSON.stringify(formValues));
+			}
+
+			setFormValuesFromLocalStorage();
+			document.addEventListener('keyup', saveUserInputValue);
+			submitButton.addEventListener('click', () => localStorage.removeItem('formValues'));
+		})();
 	</script>
 </body>
 </html>
