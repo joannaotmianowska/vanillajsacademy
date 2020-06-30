@@ -97,7 +97,9 @@
 
 	<script>
         (function() {
-            const userInputs = Array.prototype.slice.call(document.querySelectorAll('.save-me input, .save-me textarea'));
+            const userInputs = Array.prototype.slice.call(
+                document.querySelectorAll('.save-me input, .save-me textarea, .save-me select')
+            );
 			const submitButton = document.querySelector('[type=submit]');
 			let formValues = JSON.parse(localStorage.getItem('formValues')) || {};
 
@@ -109,7 +111,7 @@
 					const value = savedData[input.name];
 					if (!value) return;
 
-                    if (value === 'on' || value === 'yes') {
+                    if (value === 'on') {
                         input.checked = true;
                     } else {
                         input.value = value
@@ -118,11 +120,13 @@
 			}
 
 			const saveUserInputValue = function() {
-                const userInput = event.target.closest('.save-me input') || event.target.closest('.save-me textarea');
+                if (!event.target.closest('#save-me')) return;
+
+                const input = event.target;
 
 				formValues = {
 					...formValues,
-					[userInput.name]: userInput.value
+					[input.name]: input.checked || input.value
                 }
 
 				localStorage.setItem('formValues', JSON.stringify(formValues));
