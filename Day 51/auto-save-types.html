@@ -64,11 +64,11 @@
 
 		<p><strong>Do you agree to our terms of service?</strong></p>
 		<label>
-			<input type="radio" name="tos" value="yes" id="tos-yes">
+			<input type="radio" name="tos" value="yes">
 			Yes
 		</label>
 		<label>
-			<input type="radio" name="tos" value="no" id="tos-no">
+			<input type="radio" name="tos" value="no">
 			No
 		</label>
 
@@ -111,12 +111,9 @@
 					const value = savedData[input.name];
 					if (!value) return;
 
-                    if (value === 'on') {
+                    if (value === 'on' || input.value === value) {
                         input.checked = true;
-                    } else if (input.type === 'radio' && input.value === value) {
-                        console.log('match')
-                    }
-                    else {
+                    } else {
                         input.value = value
                     }
 				});
@@ -127,8 +124,6 @@
 
                 const input = event.target;
 
-                console.log(input.checked)
-
 				formValues = {
 					...formValues,
 					[input.name]: input.value
@@ -138,8 +133,7 @@
 			}
 
             setFormValuesFromLocalStorage();
-            document.addEventListener('keyup', saveUserInputValue);
-			document.addEventListener('change', saveUserInputValue);
+            document.addEventListener('input', saveUserInputValue);
 			submitButton.addEventListener('click', () => localStorage.removeItem('formValues'));
 		})();
 	</script>
