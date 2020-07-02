@@ -39,6 +39,8 @@
         }
 
         const fetchArticlesFromAPI = async function() {
+            console.log('Data fetched from API');
+
             try {
                 const res = await fetch(url);
                 const data = await res.json();
@@ -75,6 +77,8 @@
             const savedArticles = fetchArticlesFromLocalStorage();
 
             if (savedArticles && isDataValid(savedArticles, 1000 * 60)) {
+                console.log('Data fetched from Local storage');
+
                 articles = savedArticles.data;
             } else {
                 await fetchArticlesFromAPI();
