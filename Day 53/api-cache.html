@@ -22,7 +22,8 @@
 
 	<script>
         const url = "https://vanillajsacademy.com/api/pirates.json";
-        let articles = ['abc', 'cde', 'efg'];
+        const app = document.querySelector('#app');
+        let articles = [];
 
         const fetchArticlesFromAPI = async function() {
             console.log('api call')
@@ -58,23 +59,60 @@
             return diff < goodFor;
         }
 
-        const getNewestArticles = function() {
+        const getNewestArticles = async function() {
             console.log('getting newest')
             const savedArticles = fetchArticlesFromLocalStorage();
 
-            if (isDataValid(savedArticles, 1000 * 60)) {
-                console.log('valid data')
+            if (savedArticles && isDataValid(savedArticles, 1000 * 60)) {
+                console.log('get art from storage')
+                articles = savedArticles;
             } else {
-                console.log('old data')
+                await fetchArticlesFromAPI();
+                saveArticlesToLocalStorage();
             }
         }
 
+        const createMarkupForArticles = function() {
+            const html = articles.map(article => (`
+                <article>
+                    <h3>${article.title}</h3>
+                    <h5>${article.author}</h5>
+                    <p>${article.article}</p>
+                </article>`
+            )).join('');
+            // const article = `
+            //     <article>
+            //         <h3>${article.title}</h3>
+            //         <h5>${article.author}</h5>
+            //         <p>${article.article}</p>
+            //     </article>
+            // `
+            // const html = articles.map(article => (
+            //         '<article class="single-article">' +
+            //             '<h4>' + article.title + '</h4>' +
+            //             '<p>' +
+            //                 article.abstract + '... ' +
+            //                 '<a target="_blank" href="' + article.url + '">Read more</a>' +
+            //             '</p>' +
+            //         '</article>'
+            // )).join('');
+
+            return html;
+        }
+
         // fetchArticlesFromAPI();
-        saveArticlesToLocalStorage();
+        // saveArticlesToLocalStorage();
         // setInterval(getNewestArticles, 10000)
 
-
+        const getDataAndCreateMarkup = async function() {
+            await getNewestArticles();
+            app.innerHTML = createMarkupForArticles();
+        }
+        // getNewestArticles();
+        // app.innerHTML = createMarkupForArticles();
         // localStorage.removeItem('pirateArticles')
+
+        getDataAndCreateMarkup();
 	</script>
 </body>
 </html>
