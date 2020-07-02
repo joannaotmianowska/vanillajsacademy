@@ -21,7 +21,28 @@
 	</div>
 
 	<script>
-		// Your code goes here...
+        const url = "https://vanillajsacademy.com/api/pirates.json";
+        let articles = {};
+
+        const fetchDataFromAPI = async function() {
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                articles = data.articles;
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        const saveDataToLocalStorage = function() {
+
+        }
+
+        const fetchDataFromLocalStorage = function() {
+
+        }
+
+        fetchDataFromAPI();
 	</script>
 </body>
 </html>
