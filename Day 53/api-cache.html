@@ -21,7 +21,7 @@
 	</div>
 
 	<script>
-        const url = "https://vanillajsacademy.com/api/pirates.json";
+        const url = 'https://vanillajsacademy.com/api/pirates.json';
         const app = document.querySelector('#app');
         let articles = [];
 
@@ -32,7 +32,7 @@
                 const data = await res.json();
                 articles = data.articles;
             } catch (error) {
-                console.error(error);
+                await showErrorMessage(error);
             }
         }
 
@@ -83,6 +83,11 @@
             )).join('');
 
             return html;
+        }
+
+        const showErrorMessage = function() {
+            app.innerHTML = '<p>Something went wrong. Please refresh the site</p>';
+            console.error(error);
         }
 
         const getDataAndCreateMarkup = async function() {
