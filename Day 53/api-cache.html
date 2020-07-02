@@ -25,6 +25,12 @@
         const app = document.querySelector('#app');
         let articles = [];
 
+        function sanitizeMarkup(markup) {
+            const temp = document.createElement('div');
+            temp.textContent = markup;
+            return temp.innerHTML;
+        }
+
         const fetchArticlesFromAPI = async function() {
             console.log('api call')
             try {
@@ -74,11 +80,11 @@
         }
 
         const createMarkupForArticles = function() {
-            const html = articles.map(article => (`
+            const html = articles.map(({title, author, article }) => (`
                 <article>
-                    <h3>${article.title}</h3>
-                    <h5>${article.author}</h5>
-                    <p>${article.article}</p>
+                    <h3>${sanitizeMarkup(title)}</h3>
+                    <h5>${sanitizeMarkup(author)}</h5>
+                    <p>${sanitizeMarkup(article)}</p>
                 </article>`
             )).join('');
 
