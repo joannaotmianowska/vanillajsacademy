@@ -22,9 +22,10 @@
 
 	<script>
         const url = "https://vanillajsacademy.com/api/pirates.json";
-        let articles = ['abc', 'cde'];
+        let articles = ['abc', 'cde', 'efg'];
 
         const fetchArticlesFromAPI = async function() {
+            console.log('api call')
             try {
                 const res = await fetch(url);
                 const data = await res.json();
@@ -49,13 +50,31 @@
             return JSON.parse(localStorage.getItem('pirateArticles')) || null;
         }
 
-        const isDataValid = function() {
+        const isDataValid = function(saved, goodFor) {
+            if (!saved || !saved.data || !saved.timestamp) return;
 
+            const diff = new Date().getTime() - saved.timestamp;
+            console.log(diff)
+            return diff < goodFor;
+        }
+
+        const getNewestArticles = function() {
+            console.log('getting newest')
+            const savedArticles = fetchArticlesFromLocalStorage();
+
+            if (isDataValid(savedArticles, 1000 * 60)) {
+                console.log('valid data')
+            } else {
+                console.log('old data')
+            }
         }
 
         // fetchArticlesFromAPI();
-        // saveArticlesToLocalStorage();
-        console.log(fetchArticlesFromLocalStorage())
+        saveArticlesToLocalStorage();
+        // setInterval(getNewestArticles, 10000)
+
+
+        // localStorage.removeItem('pirateArticles')
 	</script>
 </body>
 </html>
