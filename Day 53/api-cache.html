@@ -65,7 +65,8 @@
 
             if (savedArticles && isDataValid(savedArticles, 1000 * 60)) {
                 console.log('get art from storage')
-                articles = savedArticles;
+                articles = savedArticles.data;
+                console.log('from storage', articles)
             } else {
                 await fetchArticlesFromAPI();
                 saveArticlesToLocalStorage();
@@ -80,37 +81,14 @@
                     <p>${article.article}</p>
                 </article>`
             )).join('');
-            // const article = `
-            //     <article>
-            //         <h3>${article.title}</h3>
-            //         <h5>${article.author}</h5>
-            //         <p>${article.article}</p>
-            //     </article>
-            // `
-            // const html = articles.map(article => (
-            //         '<article class="single-article">' +
-            //             '<h4>' + article.title + '</h4>' +
-            //             '<p>' +
-            //                 article.abstract + '... ' +
-            //                 '<a target="_blank" href="' + article.url + '">Read more</a>' +
-            //             '</p>' +
-            //         '</article>'
-            // )).join('');
 
             return html;
         }
-
-        // fetchArticlesFromAPI();
-        // saveArticlesToLocalStorage();
-        // setInterval(getNewestArticles, 10000)
 
         const getDataAndCreateMarkup = async function() {
             await getNewestArticles();
             app.innerHTML = createMarkupForArticles();
         }
-        // getNewestArticles();
-        // app.innerHTML = createMarkupForArticles();
-        // localStorage.removeItem('pirateArticles')
 
         getDataAndCreateMarkup();
 	</script>
