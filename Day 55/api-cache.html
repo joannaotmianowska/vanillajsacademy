@@ -43,7 +43,6 @@
             return endpoint + 'fail.json';
         };
 
-        const url = 'https://vanillajsacademy.com/api/pirates.json';
         const app = document.querySelector('#app');
         let articles = [];
 
@@ -59,11 +58,12 @@
             console.log('Data fetched from API');
 
             try {
-                const res = await fetch(url);
+                const res = await fetch(getEndpoint());
                 const data = await res.json();
                 articles = data.articles;
             } catch (error) {
-                await showErrorMessage(error);
+                console.log('errror')
+                // await showErrorMessage(error);
             }
         }
 
@@ -93,7 +93,7 @@
         const getNewestArticles = async function() {
             const savedArticles = fetchArticlesFromLocalStorage();
 
-            if (savedArticles && isDataValid(savedArticles, 1000 * 60)) {
+            if (savedArticles && isDataValid(savedArticles, 1000)) {
                 console.log('Data fetched from Local storage');
 
                 articles = savedArticles.data;
@@ -104,6 +104,8 @@
         }
 
         const createMarkupForArticles = function() {
+            if (articles.length === 0) return '<p>No articles to show. Please check later</p>';
+
             const html = articles.map(({title, author, article }) => (`
                 <article>
                     <h3>${sanitizeMarkup(title)}</h3>
