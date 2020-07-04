@@ -61,7 +61,7 @@
                 const res = await fetch(getEndpoint());
                 const data = await res.json();
                 articles = data.articles;
-                app.innerHTML = createMarkupForArticles();
+                // app.innerHTML = createMarkupForArticles();
             } catch (error) {
                 console.log('errror')
                 const cachedArticles = await fetchArticlesFromLocalStorage();
@@ -69,15 +69,10 @@
                     console.log('cachedArt', cachedArticles)
                     articles = cachedArticles.data;
                     console.log('from cached', articles)
-                    app.innerHTML = createMarkupForArticles();
                 } else {
                     console.log('noCached')
                     await showErrorMessage(error);
                 }
-
-                // const cachedArticles = await fetchArticlesFromLocalStorage();
-                // articles = cachedArticles;
-                // await showErrorMessage(error);
             }
         }
 
@@ -111,7 +106,6 @@
                 console.log('Data fetched from Local storage');
 
                 articles = savedArticles.data;
-                app.innerHTML = createMarkupForArticles();
             } else {
                 await fetchArticlesFromAPI();
                 saveArticlesToLocalStorage();
@@ -133,19 +127,23 @@
             return html;
         }
 
+        const showArticles = function() {
+            app.innerHTML = createMarkupForArticles();
+        }
+
         const showErrorMessage = function() {
             app.innerHTML = '<p>Something went wrong. Please refresh the site</p>';
 
             console.error(error);
         }
 
-        const getDataAndCreateMarkup = async function() {
+        const getDatCreateMarkupAndShowArticles = async function() {
             await getNewestArticles();
 
-            // app.innerHTML = createMarkupForArticles(articles);
+            showArticles();
         }
 
-        getDataAndCreateMarkup();
+        getDatCreateMarkupAndShowArticles();
 	</script>
 </body>
 </html>
