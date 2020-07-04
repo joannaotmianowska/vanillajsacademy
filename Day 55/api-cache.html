@@ -63,6 +63,17 @@
                 articles = data.articles;
             } catch (error) {
                 console.log('errror')
+                const cachedArticles = await fetchArticlesFromLocalStorage();
+                if (cachedArticles) {
+                    console.log('cachedArt', cachedArticles)
+                    articles = cachedArticles;
+                } else {
+                    console.log('noCached')
+                    await showErrorMessage();
+                }
+
+                // const cachedArticles = await fetchArticlesFromLocalStorage();
+                // articles = cachedArticles;
                 // await showErrorMessage(error);
             }
         }
