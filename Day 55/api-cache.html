@@ -61,15 +61,18 @@
                 const res = await fetch(getEndpoint());
                 const data = await res.json();
                 articles = data.articles;
+                app.innerHTML = createMarkupForArticles();
             } catch (error) {
                 console.log('errror')
                 const cachedArticles = await fetchArticlesFromLocalStorage();
                 if (cachedArticles) {
                     console.log('cachedArt', cachedArticles)
-                    articles = cachedArticles;
+                    articles = cachedArticles.data;
+                    console.log('from cached', articles)
+                    app.innerHTML = createMarkupForArticles();
                 } else {
                     console.log('noCached')
-                    await showErrorMessage();
+                    await showErrorMessage(error);
                 }
 
                 // const cachedArticles = await fetchArticlesFromLocalStorage();
@@ -108,6 +111,7 @@
                 console.log('Data fetched from Local storage');
 
                 articles = savedArticles.data;
+                app.innerHTML = createMarkupForArticles();
             } else {
                 await fetchArticlesFromAPI();
                 saveArticlesToLocalStorage();
@@ -115,6 +119,7 @@
         }
 
         const createMarkupForArticles = function() {
+            console.log('articles form create markup', articles)
             if (articles.length === 0) return '<p>No articles to show. Please check later</p>';
 
             const html = articles.map(({title, author, article }) => (`
@@ -137,7 +142,7 @@
         const getDataAndCreateMarkup = async function() {
             await getNewestArticles();
 
-            app.innerHTML = createMarkupForArticles();
+            // app.innerHTML = createMarkupForArticles(articles);
         }
 
         getDataAndCreateMarkup();
