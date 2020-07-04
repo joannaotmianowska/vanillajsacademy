@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>API Cache</title>
+
+	<style type="text/css">
+		body {
+			margin: 1em auto;
+			max-width: 40em;
+            width: 88%;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        }
+
+        article {
+            margin-bottom: 40px;
+        }
+	</style>
+</head>
+<body>
+
+	<h1>API Cache</h1>
+	<p><em><strong>The Scuttlebutt</strong>&mdash;the number one source for pirate news!</em></p>
+
+	<div id="app" aria-live="polite">
+		Loading...
+	</div>
+
+	<script>
+        /**
+         *  If there’s data in localStorage, and it hasn’t expired, use it.
+         *  Otherwise, call the API to get fresh data.
+         *  If the API fails and there’s expired data in localStorage, use that instead.
+         */
+
+        /**
+         * Dynamically vary the API endpoint
+         * @return {String} The API endpoint
+         */
+        var getEndpoint = function () {
+            var endpoint = 'https://vanillajsacademy.com/api/';
+            var random = Math.random();
+            if (random < 0.5) return endpoint + 'pirates.json';
+            return endpoint + 'fail.json';
+        };
+
+        const url = 'https://vanillajsacademy.com/api/pirates.json';
+        const app = document.querySelector('#app');
+        let articles = [];
+
+        function sanitizeMarkup(markup) {
+            const temp = document.createElement('div');
+
+            temp.textContent = markup;
+
+            return temp.innerHTML;
+        }
+
+        const fetchArticlesFromAPI = async function() {
+            console.log('Data fetched from API');
+
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                articles = data.articles;
+            } catch (error) {
+                await showErrorMessage(error);
+            }
+        }
+
+        const saveArticlesToLocalStorage = function() {
+            if (articles.length === 0) return;
+
+            const dataToSave = {
+                data: articles,
+                timestamp: new Date().getTime()
+            }
+
+            localStorage.setItem('pirateArticles', JSON.stringify(dataToSave));
+        }
+
+        const fetchArticlesFromLocalStorage = function() {
+            return JSON.parse(localStorage.getItem('pirateArticles')) || null;
+        }
+
+        const isDataValid = function(saved, goodFor) {
+            if (!saved || !saved.data || !saved.timestamp) return;
+
+            const diff = new Date().getTime() - saved.timestamp;
+
+            return diff < goodFor;
+        }
+
+        const getNewestArticles = async function() {
+            const savedArticles = fetchArticlesFromLocalStorage();
+
+            if (savedArticles && isDataValid(savedArticles, 1000 * 60)) {
+                console.log('Data fetched from Local storage');
+
+                articles = savedArticles.data;
+            } else {
+                await fetchArticlesFromAPI();
+                saveArticlesToLocalStorage();
+            }
+        }
+
+        const createMarkupForArticles = function() {
+            const html = articles.map(({title, author, article }) => (`
+                <article>
+                    <h3>${sanitizeMarkup(title)}</h3>
+                    <h5>${sanitizeMarkup(author)}</h5>
+                    <p>${sanitizeMarkup(article)}</p>
+                </article>`
+            )).join('');
+
+            return html;
+        }
+
+        const showErrorMessage = function() {
+            app.innerHTML = '<p>Something went wrong. Please refresh the site</p>';
+
+            console.error(error);
+        }
+
+        const getDataAndCreateMarkup = async function() {
+            await getNewestArticles();
+
+            app.innerHTML = createMarkupForArticles();
+        }
+
+        getDataAndCreateMarkup();
+	</script>
+</body>
+</html>
