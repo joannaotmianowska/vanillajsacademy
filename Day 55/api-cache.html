@@ -61,16 +61,14 @@
                 const res = await fetch(getEndpoint());
                 const data = await res.json();
                 articles = data.articles;
-                // app.innerHTML = createMarkupForArticles();
             } catch (error) {
-                console.log('errror')
+                console.log('API call failed, shown articles are from Local storage');
+
                 const cachedArticles = await fetchArticlesFromLocalStorage();
+
                 if (cachedArticles) {
-                    console.log('cachedArt', cachedArticles)
                     articles = cachedArticles.data;
-                    console.log('from cached', articles)
                 } else {
-                    console.log('noCached')
                     await showErrorMessage(error);
                 }
             }
@@ -113,7 +111,6 @@
         }
 
         const createMarkupForArticles = function() {
-            console.log('articles form create markup', articles)
             if (articles.length === 0) return '<p>No articles to show. Please check later</p>';
 
             const html = articles.map(({title, author, article }) => (`
