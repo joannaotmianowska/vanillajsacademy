@@ -100,7 +100,7 @@
         const getNewestArticles = async function() {
             const savedArticles = fetchArticlesFromLocalStorage();
 
-            if (savedArticles && isDataValid(savedArticles, 1000)) {
+            if (savedArticles && isDataValid(savedArticles, 5000)) {
                 console.log('Data fetched from Local storage');
 
                 articles = savedArticles.data;
