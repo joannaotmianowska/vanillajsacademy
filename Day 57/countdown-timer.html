@@ -10,11 +10,49 @@
             width: 88%;
             font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
         }
+
+        .hide {
+            display: none;
+        }
 	</style>
 </head>
 <body>
-
+    <div id="app">
+        <div class="timer"></div>
+        <button class="hide">Restart the counter</button>
+    </div>
 </body>
 <script>
-    <div id="app"></div>
+    const timer = document.querySelector('.timer');
+    const restartBtn = document.querySelector('button');
+
+    const data = {
+        seconds: 5,
+    }
+
+    const countSecondsDownAndUpdateMarkup = function() {
+        data.seconds--;
+
+        if (data.seconds < 0) {
+            restartBtn.classList.remove('hide');
+            window.clearInterval(counter);
+        } else {
+            showCurrentDataInMarkup();
+        }
+    }
+
+    const template = function({ seconds }) {
+        const html = `<span>${seconds}</span>`;
+
+        return html;
+    }
+
+    const showCurrentDataInMarkup = function() {
+        timer.innerHTML = template(data);
+    }
+
+    const counter = window.setInterval(countSecondsDownAndUpdateMarkup, 1000);
+
+    showCurrentDataInMarkup();
+    // setInterval(countSecondsDownAndUpdateMarkup, 1000);
 </script>
