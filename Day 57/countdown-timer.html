@@ -25,6 +25,7 @@
 <script>
     const timer = document.querySelector('.timer');
     const restartBtn = document.querySelector('button');
+    let counter;
 
     const data = {
         seconds: 5,
@@ -51,8 +52,12 @@
         timer.innerHTML = template(data);
     }
 
-    const counter = window.setInterval(countSecondsDownAndUpdateMarkup, 1000);
+    const startCounter = function() {
+        restartBtn.classList.add('hide');
+        counter = window.setInterval(countSecondsDownAndUpdateMarkup, 1000);
+    }
 
     showCurrentDataInMarkup();
-    // setInterval(countSecondsDownAndUpdateMarkup, 1000);
+    startCounter();
+    restartBtn.addEventListener('click', startCounter);
 </script>
