@@ -25,10 +25,11 @@
 <script>
     const timer = document.querySelector('.timer');
     const restartBtn = document.querySelector('button');
+    const secondsToCountdown = 60;
     let counter;
 
     const data = {
-        seconds: 5,
+        seconds: secondsToCountdown
     }
 
     const countSecondsDownAndUpdateMarkup = function() {
@@ -44,7 +45,6 @@
 
     const template = function({ seconds }) {
         const html = `<span>${seconds}</span>`;
-
         return html;
     }
 
@@ -54,6 +54,8 @@
 
     const startCounter = function() {
         restartBtn.classList.add('hide');
+        data.seconds = secondsToCountdown;
+        showCurrentDataInMarkup();
         counter = window.setInterval(countSecondsDownAndUpdateMarkup, 1000);
     }
 
