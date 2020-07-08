@@ -23,6 +23,16 @@
     </div>
 </body>
 <script>
+    const StateComponent = function(selector, options) {
+        this.elem = document.querySelector(selector);
+        this.data = options.data;
+        this.template = options.template;
+    }
+
+    StateComponent.prototype.render = function() {
+        this.elem.innerHTML = this.template(this.data);
+    }
+
     const timer = document.querySelector('.timer');
     const restartBtn = document.querySelector('button');
     const secondsToCountdown = 60;
