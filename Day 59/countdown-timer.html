@@ -33,27 +33,28 @@
         this.elem.innerHTML = this.template(this.data);
     }
 
-    const secondsToCountdown = 120;
+    const secondsToCountdown = 3;
     let counter;
 
     const countdownApp = new StateComponent('.timer', {
         data: {
             duration: secondsToCountdown,
             formattedTime: {
-                minutes: '',
-                seconds: ''
+                minutes: '00',
+                seconds: '00'
             }
         },
         template: ({ duration, formattedTime }) => {
             return duration < 1
                 ? '<button data-restart-timer>Restart the counter</button>'
-                : `<span>${formattedTime.minutes}</span><span>${formattedTime.seconds}</span>`
+                : `<span>${formattedTime.minutes}:${formattedTime.seconds}</span>`
         }
     })
 
     const countSecondsDownAndUpdateMarkup = function() {
         countdownApp.data.duration--;
         stopCounter();
+        formatTime();
         countdownApp.render()
     }
 
@@ -74,7 +75,10 @@
     }
 
     const stopCounter = function() {
-        if (countdownApp.data.duration < 0) window.clearInterval(counter);
+        if (countdownApp.data.duration < 0) {
+            countdownApp.data.duration = 0;
+            window.clearInterval(counter);
+        }
     }
 
     const clickHandler = function(e) {
