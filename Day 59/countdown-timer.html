@@ -33,14 +33,14 @@
         this.elem.innerHTML = this.template(this.data);
     }
 
-    const secondsToCountdown = 3;
+    const secondsToCountdown = 120;
     let counter;
 
     const countdownApp = new StateComponent('.timer', {
         data: {
             duration: secondsToCountdown,
             formattedTime: {
-                minutes: '00',
+                minutes: '0',
                 seconds: '00'
             }
         },
@@ -63,7 +63,7 @@
         const seconds = countdownApp.data.duration % 60;
 
         countdownApp.data.formattedTime = {
-            minutes: minutes.toString().padStart(2, '0'),
+            minutes: minutes.toString(),
             seconds: seconds.toString().padStart(2, '0')
         }
     }
