@@ -20,7 +20,7 @@
 <body>
     <div id="app" aria-live="polite">
         <div class="timer"></div>
-        <button class="hide">Restart the counter</button>
+        <!-- <button class="hide">Restart the counter</button> -->
     </div>
 </body>
 <script>
@@ -34,35 +34,36 @@
         this.elem.innerHTML = this.template(this.data);
     }
 
-    const restartBtn = document.querySelector('button');
-    const secondsToCountdown = 60;
+    const secondsToCountdown = 3;
     let counter;
 
     const countdownApp = new StateComponent('.timer', {
         data: {
             seconds: secondsToCountdown
         },
-        template: ({ seconds }) => (`<span>${seconds}</span>`)
+        template: ({ seconds }) => {
+            return seconds < 1
+                ? '<button data-restart-timer>Restart the counter</button>'
+                : `<span>${seconds}</span>`
+        }
     })
 
     const countSecondsDownAndUpdateMarkup = function() {
         countdownApp.data.seconds--;
-
-        if (countdownApp.data.seconds < 0) {
-            restartBtn.classList.remove('hide');
-            window.clearInterval(counter);
-        } else {
-            countdownApp.render();
-        }
+        countdownApp.render()
+        // countdownApp.data.seconds < 0 ? window.clearInterval(counter) : countdownApp.render();
     }
 
     const startCounter = function() {
-        restartBtn.classList.add('hide');
         countdownApp.data.seconds = secondsToCountdown;
         countdownApp.render();
         counter = window.setInterval(countSecondsDownAndUpdateMarkup, 1000);
     }
 
+    const clickHandler = function(e) {
+        if (e.target.hasAttribute('data-restart-timer')) startCounter();
+    }
+
     startCounter();
-    restartBtn.addEventListener('click', startCounter);
+    document.addEventListener('click', clickHandler);
 </script>
