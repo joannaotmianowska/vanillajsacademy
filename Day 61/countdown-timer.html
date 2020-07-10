@@ -71,7 +71,7 @@
     }
 
     const restartCounter = function() {
-        countdownApp.data.duration = secondsToCountdown;
+        // countdownApp.data.duration = secondsToCountdown;
         countdownApp.render();
         counter = window.setInterval(countSecondsDownAndUpdateMarkup, 1000);
     }
@@ -87,8 +87,9 @@
 
     const stopCounter = function() {
         if (countdownApp.data.duration < 0) {
-            countdownApp.data.duration = 0;
             window.clearInterval(counter);
+            countdownApp.data.duration = secondsToCountdown;
+            formatTime();
         }
     }
 
@@ -97,6 +98,8 @@
             restartCounter();
         } else if (e.target.hasAttribute('data-start-timer')) {
             startCounter();
+        } else if (e.target.hasAttribute('data-pause-timer')) {
+            pauseCounter();
         }
     }
 
