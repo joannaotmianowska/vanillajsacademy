@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Countdown Timer</title>
+
+	<style type="text/css">
+		body {
+			margin: 1em auto;
+			max-width: 40em;
+            width: 88%;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            font-size: 50px;
+        }
+
+        .hide {
+            display: none;
+        }
+	</style>
+</head>
+<body>
+    <div id="app" aria-live="polite">
+        <div class="timer"></div>
+        <button data-start-timer>Start timer</button>
+        <button data-pause-timer>Pause timer</button>
+    </div>
+</body>
+<script>
+    const StateComponent = function(selector, options) {
+        this.elem = document.querySelector(selector);
+        this.data = options.data;
+        this.template = options.template;
+    }
+
+    StateComponent.prototype.render = function() {
+        this.elem.innerHTML = this.template(this.data);
+    }
+
+    const secondsToCountdown = 5;
+    let counter;
+
+    const countdownApp = new StateComponent('.timer', {
+        data: {
+            duration: secondsToCountdown,
+            formattedTime: {
+                minutes: '0',
+                seconds: '00'
+            }
+        },
+        template: ({ duration, formattedTime }) => {
+            return duration < 1
+                ? '<button data-restart-timer>Restart the counter</button>'
+                : `<span>${formattedTime.minutes}:${formattedTime.seconds}</span>`
+        }
+    });
+
+    const countSecondsDownAndUpdateMarkup = function() {
+        countdownApp.data.duration--;
+        formatTime();
+        stopCounter();
+        countdownApp.render()
+    }
+
+    const formatTime = function() {
+        const minutes = Math.floor(countdownApp.data.duration / 60);
+        const seconds = countdownApp.data.duration % 60;
+
+        countdownApp.data.formattedTime = {
+            minutes: minutes.toString(),
+            seconds: seconds.toString().padStart(2, '0')
+        }
+    }
+
+    const restartCounter = function() {
+        countdownApp.data.duration = secondsToCountdown;
+        countdownApp.render();
+        counter = window.setInterval(countSecondsDownAndUpdateMarkup, 1000);
+    }
+
+    const startCounter = function() {
+        countdownApp.render();
+        counter = window.setInterval(countSecondsDownAndUpdateMarkup, 1000);
+    }
+
+    const pauseCounter = function() {
+        window.clearInterval(counter);
+    }
+
+    const stopCounter = function() {
+        if (countdownApp.data.duration < 0) {
+            countdownApp.data.duration = 0;
+            window.clearInterval(counter);
+        }
+    }
+
+    const clickHandler = function(e) {
+        if (e.target.hasAttribute('data-restart-timer')) {
+            restartCounter();
+        } else if (e.target.hasAttribute('data-start-timer')) {
+            startCounter();
+        }
+    }
+
+    formatTime();
+    countdownApp.render();
+    document.addEventListener('click', clickHandler);
+</script>
