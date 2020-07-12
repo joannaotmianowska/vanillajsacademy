@@ -20,8 +20,6 @@
 <body>
     <div id="app" aria-live="polite">
         <div class="timer"></div>
-        <button data-start-timer>Start timer</button>
-        <button data-pause-timer>Pause timer</button>
     </div>
 </body>
 <script>
@@ -38,58 +36,52 @@
     const secondsToCountdown = 5;
     let counter;
 
-    const countdownApp = new StateComponent('.timer', {
-        data: {
-            duration: secondsToCountdown,
-            formattedTime: {
-                minutes: '0',
-                seconds: '00'
-            }
-        },
-        template: ({ duration, formattedTime }) => {
-            return duration < 1
-                ? '<button data-restart-timer>Restart the counter</button>'
-                : `<span>${formattedTime.minutes}:${formattedTime.seconds}</span>`
-        }
-    });
+    const getTimerHTML = function({ duration, paused }) {
+        const minutes = Math.floor(duration / 60);
+        const seconds = duration % 60;
+        const html = `
+            <div>
+                <span>${minutes.toString()}</span>:<span>${seconds.toString().padStart(2, '0')}</span>
+            </div>
+            <div>
+                ${ paused ? '<button data-start-timer>Start timer</button>' : '<button data-pause-timer>Pause the timer</button>' }
+            </div>
+            <div>
+                <button data-restart-timer>Restart the timer</button>
+            </div>
+        `
+
+        return html;
+    }
 
     const countSecondsDownAndUpdateMarkup = function() {
         countdownApp.data.duration--;
-        formatTime();
         stopCounter();
         countdownApp.render()
     }
 
-    const formatTime = function() {
-        const minutes = Math.floor(countdownApp.data.duration / 60);
-        const seconds = countdownApp.data.duration % 60;
-
-        countdownApp.data.formattedTime = {
-            minutes: minutes.toString(),
-            seconds: seconds.toString().padStart(2, '0')
-        }
-    }
-
     const restartCounter = function() {
+        window.clearInterval(counter);
         countdownApp.data.duration = secondsToCountdown;
-        countdownApp.render();
-        counter = window.setInterval(countSecondsDownAndUpdateMarkup, 1000);
+        startCounter();
     }
 
     const startCounter = function() {
+        countdownApp.data.paused = false;
         countdownApp.render();
         counter = window.setInterval(countSecondsDownAndUpdateMarkup, 1000);
     }
 
     const pauseCounter = function() {
+        countdownApp.data.paused = true;
         window.clearInterval(counter);
+        countdownApp.render();
     }
 
     const stopCounter = function() {
         if (countdownApp.data.duration < 0) {
             window.clearInterval(counter);
             countdownApp.data.duration = 0;
-            formatTime();
         }
     }
 
@@ -103,7 +95,18 @@
         }
     }
 
-    formatTime();
+    const countdownApp = new StateComponent('.timer', {
+        data: {
+            duration: secondsToCountdown,
+            paused: true
+        },
+        template: (props) => {
+            return props.duration < 1
+                ? '<button data-restart-timer>Restart the counter</button>'
+                : getTimerHTML(props);
+        }
+    });
+
     countdownApp.render();
     document.addEventListener('click', clickHandler);
 </script>
