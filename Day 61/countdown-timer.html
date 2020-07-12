@@ -20,8 +20,6 @@
 <body>
     <div id="app" aria-live="polite">
         <div class="timer"></div>
-        <button data-start-timer>Start timer</button>
-        <button data-pause-timer>Pause timer</button>
     </div>
 </body>
 <script>
@@ -41,34 +39,49 @@
     const countdownApp = new StateComponent('.timer', {
         data: {
             duration: secondsToCountdown,
-            formattedTime: {
-                minutes: '0',
-                seconds: '00'
-            }
+            paused: true
         },
-        template: ({ duration, formattedTime }) => {
-            return duration < 1
+        template: (props) => {
+            return props.duration < 1
                 ? '<button data-restart-timer>Restart the counter</button>'
-                : `<span>${formattedTime.minutes}:${formattedTime.seconds}</span>`
+                : getTimerHTML(props);
         }
     });
 
+    const getTimerHTML = function({ duration, paused }) {
+        const minutes = Math.floor(duration / 60);
+        const seconds = duration % 60;
+        const html = `
+            <div>
+                <span>${minutes.toString()}</span><span>${seconds.toString().padStart(2, '0')}</span>
+            </div>
+            <div>
+                ${ paused ? '<button>Start timer</button>' : '<button>Pause</button>' }
+            </div>
+            <div>
+                <button data-restart-timer>Restart the timer</button>
+            </div>
+        `
+
+        return html;
+    }
+
     const countSecondsDownAndUpdateMarkup = function() {
         countdownApp.data.duration--;
-        formatTime();
+        // formatTime();
         stopCounter();
         countdownApp.render()
     }
 
-    const formatTime = function() {
-        const minutes = Math.floor(countdownApp.data.duration / 60);
-        const seconds = countdownApp.data.duration % 60;
+    // const formatTime = function() {
+    //     const minutes = Math.floor(countdownApp.data.duration / 60);
+    //     const seconds = countdownApp.data.duration % 60;
 
-        countdownApp.data.formattedTime = {
-            minutes: minutes.toString(),
-            seconds: seconds.toString().padStart(2, '0')
-        }
-    }
+    //     countdownApp.data.formattedTime = {
+    //         minutes: minutes.toString(),
+    //         seconds: seconds.toString().padStart(2, '0')
+    //     }
+    // }
 
     const restartCounter = function() {
         countdownApp.data.duration = secondsToCountdown;
@@ -103,7 +116,7 @@
         }
     }
 
-    formatTime();
+    // formatTime();
     countdownApp.render();
     document.addEventListener('click', clickHandler);
 </script>
