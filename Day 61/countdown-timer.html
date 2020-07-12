@@ -36,20 +36,7 @@
     const secondsToCountdown = 5;
     let counter;
 
-    const countdownApp = new StateComponent('.timer', {
-        data: {
-            duration: secondsToCountdown,
-            paused: true
-        },
-        template: (props) => {
-            return props.duration < 1
-                ? '<button data-restart-timer>Restart the counter</button>'
-                : getTimerHTML(props);
-        }
-    });
-
     const getTimerHTML = function({ duration, paused }) {
-        console.log(paused)
         const minutes = Math.floor(duration / 60);
         const seconds = duration % 60;
         const html = `
@@ -108,6 +95,18 @@
             pauseCounter();
         }
     }
+
+    const countdownApp = new StateComponent('.timer', {
+        data: {
+            duration: secondsToCountdown,
+            paused: true
+        },
+        template: (props) => {
+            return props.duration < 1
+                ? '<button data-restart-timer>Restart the counter</button>'
+                : getTimerHTML(props);
+        }
+    });
 
     countdownApp.render();
     document.addEventListener('click', clickHandler);
