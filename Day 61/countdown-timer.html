@@ -53,10 +53,10 @@
         const seconds = duration % 60;
         const html = `
             <div>
-                <span>${minutes.toString()}</span><span>${seconds.toString().padStart(2, '0')}</span>
+                <span>${minutes.toString()}</span>:<span>${seconds.toString().padStart(2, '0')}</span>
             </div>
             <div>
-                ${ paused ? '<button>Start timer</button>' : '<button>Pause</button>' }
+                ${ paused ? '<button data-start-timer>Start timer</button>' : '<button data-pause-timer>Pause</button>' }
             </div>
             <div>
                 <button data-restart-timer>Restart the timer</button>
@@ -68,20 +68,9 @@
 
     const countSecondsDownAndUpdateMarkup = function() {
         countdownApp.data.duration--;
-        // formatTime();
         stopCounter();
         countdownApp.render()
     }
-
-    // const formatTime = function() {
-    //     const minutes = Math.floor(countdownApp.data.duration / 60);
-    //     const seconds = countdownApp.data.duration % 60;
-
-    //     countdownApp.data.formattedTime = {
-    //         minutes: minutes.toString(),
-    //         seconds: seconds.toString().padStart(2, '0')
-    //     }
-    // }
 
     const restartCounter = function() {
         countdownApp.data.duration = secondsToCountdown;
@@ -102,7 +91,6 @@
         if (countdownApp.data.duration < 0) {
             window.clearInterval(counter);
             countdownApp.data.duration = 0;
-            formatTime();
         }
     }
 
@@ -116,7 +104,6 @@
         }
     }
 
-    // formatTime();
     countdownApp.render();
     document.addEventListener('click', clickHandler);
 </script>
