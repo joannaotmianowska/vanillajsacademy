@@ -57,9 +57,7 @@
         const seconds = duration % 60;
         const html = `
             <div>
-                <span>${minutes.toString()}</span>
-                :
-                <span>${seconds.toString().padStart(2, '0')}</span>
+                <span>${minutes.toString()}</span>:<span>${seconds.toString().padStart(2, '0')}</span>
             </div>
             <div>
                 ${ paused ? '<button data-start-timer>Start timer</button>' : '<button data-pause-timer>Pause the timer</button>' }
