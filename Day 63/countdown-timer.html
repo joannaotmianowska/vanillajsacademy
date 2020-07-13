@@ -23,7 +23,7 @@
     </div>
 </body>
 <script>
-    const proxyHandler = function () {
+    const proxyHandler = function (instance) {
         return {
             get: function (obj, prop) {
                 console.log('got it!');
@@ -35,20 +35,15 @@
             set: function (obj, prop, value) {
                 console.log('set it');
                 obj[prop] = value;
+                instance.render();
                 return true;
-            },
-            deleteProperty: function (obj, prop) {
-                console.log('delete it');
-                delete obj[prop];
-                return true;
-
             }
         };
     };
 
     const StateComponent = function(selector, options) {
         this.elem = document.querySelector(selector);
-        this.data = new Proxy(options.data, proxyHandler());
+        this.data = new Proxy(options.data, proxyHandler(this));
         this.template = options.template;
     }
 
@@ -80,7 +75,6 @@
     const countSecondsDownAndUpdateMarkup = function() {
         countdownApp.data.duration--;
         stopCounter();
-        countdownApp.render()
     }
 
     const restartCounter = function() {
@@ -91,14 +85,12 @@
 
     const startCounter = function() {
         countdownApp.data.paused = false;
-        countdownApp.render();
         counter = window.setInterval(countSecondsDownAndUpdateMarkup, 1000);
     }
 
     const pauseCounter = function() {
         countdownApp.data.paused = true;
         window.clearInterval(counter);
-        countdownApp.render();
     }
 
     const stopCounter = function() {
