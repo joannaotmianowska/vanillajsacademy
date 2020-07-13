@@ -26,14 +26,12 @@
     const proxyHandler = function (instance) {
         return {
             get: function (obj, prop) {
-                console.log('got it!');
                 if (['[object Object]', '[object Array]'].indexOf(Object.prototype.toString.call(obj[prop])) > -1) {
                     return new Proxy(obj[prop], handler());
                 }
                 return obj[prop];
             },
             set: function (obj, prop, value) {
-                console.log('set it');
                 obj[prop] = value;
                 instance.render();
                 return true;
@@ -51,7 +49,7 @@
         this.elem.innerHTML = this.template(this.data);
     }
 
-    const secondsToCountdown = 5;
+    const secondsToCountdown = 120;
     let counter;
 
     const getTimerHTML = function({ duration, paused }) {
@@ -59,7 +57,9 @@
         const seconds = duration % 60;
         const html = `
             <div>
-                <span>${minutes.toString()}</span>:<span>${seconds.toString().padStart(2, '0')}</span>
+                <span>${minutes.toString()}</span>
+                :
+                <span>${seconds.toString().padStart(2, '0')}</span>
             </div>
             <div>
                 ${ paused ? '<button data-start-timer>Start timer</button>' : '<button data-pause-timer>Pause the timer</button>' }
