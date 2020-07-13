@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Countdown Timer</title>
+
+	<style type="text/css">
+		body {
+			margin: 1em auto;
+			max-width: 40em;
+            width: 88%;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            font-size: 50px;
+        }
+
+        .hide {
+            display: none;
+        }
+	</style>
+</head>
+<body>
+    <div id="app" aria-live="polite">
+        <div class="timer"></div>
+    </div>
+</body>
+<script>
+    const StateComponent = function(selector, options) {
+        this.elem = document.querySelector(selector);
+        this.data = options.data;
+        this.template = options.template;
+    }
+
+    StateComponent.prototype.render = function() {
+        this.elem.innerHTML = this.template(this.data);
+    }
+
+    const secondsToCountdown = 5;
+    let counter;
+
+    const getTimerHTML = function({ duration, paused }) {
+        const minutes = Math.floor(duration / 60);
+        const seconds = duration % 60;
+        const html = `
+            <div>
+                <span>${minutes.toString()}</span>:<span>${seconds.toString().padStart(2, '0')}</span>
+            </div>
+            <div>
+                ${ paused ? '<button data-start-timer>Start timer</button>' : '<button data-pause-timer>Pause the timer</button>' }
+            </div>
+            <div>
+                <button data-restart-timer>Restart the timer</button>
+            </div>
+        `
+
+        return html;
+    }
+
+    const countSecondsDownAndUpdateMarkup = function() {
+        countdownApp.data.duration--;
+        stopCounter();
+        countdownApp.render()
+    }
+
+    const restartCounter = function() {
+        window.clearInterval(counter);
+        countdownApp.data.duration = secondsToCountdown;
+        startCounter();
+    }
+
+    const startCounter = function() {
+        countdownApp.data.paused = false;
+        countdownApp.render();
+        counter = window.setInterval(countSecondsDownAndUpdateMarkup, 1000);
+    }
+
+    const pauseCounter = function() {
+        countdownApp.data.paused = true;
+        window.clearInterval(counter);
+        countdownApp.render();
+    }
+
+    const stopCounter = function() {
+        if (countdownApp.data.duration < 0) {
+            window.clearInterval(counter);
+            countdownApp.data.duration = 0;
+        }
+    }
+
+    const clickHandler = function(e) {
+        if (e.target.hasAttribute('data-start-timer')) {
+            startCounter();
+        } else if (e.target.hasAttribute('data-restart-timer')) {
+            restartCounter();
+        } else if (e.target.hasAttribute('data-pause-timer')) {
+            pauseCounter();
+        }
+    }
+
+    const countdownApp = new StateComponent('.timer', {
+        data: {
+            duration: secondsToCountdown,
+            paused: true
+        },
+        template: (props) => {
+            return props.duration < 1
+                ? '<button data-restart-timer>Restart the counter</button>'
+                : getTimerHTML(props);
+        }
+    });
+
+    countdownApp.render();
+    document.addEventListener('click', clickHandler);
+</script>
