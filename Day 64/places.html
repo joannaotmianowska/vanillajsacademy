@@ -9,6 +9,11 @@
 			max-width: 60em;
 			width: 88%;
 		}
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
 	</style>
 </head>
 <body>
@@ -40,9 +45,18 @@
 
         const app = new Reef('#app', {
             data,
-	        template: (props) => {
-                console.log(props);
-                return `<h1>Hello, world!${props.places}</h1>`
+	        template: ({ places }) => {
+
+                if (!places) return '<p>Something went wrong. Please refresh the site.</p>';
+
+                const placesList = places.map(({ place, description }) => (
+                    `<li>
+                        <h5>${place}</h5>
+                        <p>${description}</p>
+                    </li>`
+                )).join('');
+
+                return `<ul>${placesList}</ul>`;
             }
         });
 
