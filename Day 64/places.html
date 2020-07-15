@@ -20,7 +20,38 @@
 
 	<script src="https://cdn.jsdelivr.net/npm/reefjs@7/dist/reef.js"></script>
 	<script>
-		// Your code goes here...
+		const url = 'https://vanillajsacademy.com/api/places.json';
+        let data = {
+            places: []
+        };
+        const fetchPlacesFromAPI = async function() {
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                return data;
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        const updateData = async function() {
+            data.places = await fetchPlacesFromAPI();
+        }
+
+        const app = new Reef('#app', {
+            data,
+	        template: (props) => {
+                console.log(props);
+                return `<h1>Hello, world!${props.places}</h1>`
+            }
+        });
+
+        const getDataAndRenderApp = async function() {
+            await updateData();
+            app.render();
+        };
+
+        getDataAndRenderApp();
 	</script>
 </body>
 </html>
