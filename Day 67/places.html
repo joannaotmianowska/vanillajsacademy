@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Explore</title>
+
+	<style type="text/css">
+		body {
+			margin: 1em auto;
+			max-width: 60em;
+			width: 88%;
+		}
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+	</style>
+</head>
+<body>
+
+	<h1>Explore</h1>
+	<p>Explore cool, quirky places in your own backyard.</p>
+
+	<div id="app">Loading...</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/reefjs@7/dist/reef.js"></script>
+	<script>
+		const url = 'https://vanillajsacademy.com/api/places.json';
+        let data = {
+            places: []
+        };
+        const fetchPlacesFromAPI = async function() {
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                console.log(data)
+                return data;
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        const updateData = async function() {
+            data.places = await fetchPlacesFromAPI();
+        }
+
+        const app = new Reef('#app', {
+            data,
+	        template: ({ places }) => {
+
+                if (!places) return '<p>Something went wrong. Please refresh the site.</p>';
+
+                const placesList = places.map(({ place, description }) => (
+                    `<li>
+                        <h5>${place}</h5>
+                        <p>${description}</p>
+                    </li>`
+                )).join('');
+
+                return `<ul>${placesList}</ul>`;
+            }
+        });
+
+        const getDataAndRenderApp = async function() {
+            await updateData();
+            app.render();
+        };
+
+        getDataAndRenderApp();
+	</script>
+</body>
+</html>
