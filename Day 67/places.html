@@ -43,7 +43,7 @@
             }
         }
 
-        const updateData = async function() {
+        const getInitialDataAndAddFavProp = async function() {
             data.places = await fetchPlacesFromAPI();
 
             data.places.forEach(place => {
@@ -54,7 +54,9 @@
         const markUnmarkAsFavorite = function(placeId, iconClicked) {
             const clickedPlace = data.places.filter(place => place.id === placeId)[0];
 
-            clickedPlace.fav = true;
+            clickedPlace.fav = 'true';
+
+            app.render();
         }
 
         const handleClick = function(e) {
@@ -84,14 +86,14 @@
             }
         });
 
-        const getDataAndRenderApp = async function() {
-            await updateData();
+        const getInitDataAndRenderApp = async function() {
+            await getInitialDataAndAddFavProp();
             app.render();
         };
 
         document.addEventListener('click', handleClick);
 
-        getDataAndRenderApp();
+        getInitDataAndRenderApp();
 	</script>
 </body>
 </html>
