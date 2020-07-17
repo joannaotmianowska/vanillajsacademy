@@ -31,8 +31,9 @@
 	<script>
 		const url = 'https://vanillajsacademy.com/api/places.json';
         let data = {
-            places: []
+            places: JSON.parse(localStorage.getItem('placesData')) || []
         };
+
         const fetchPlacesFromAPI = async function() {
             try {
                 const res = await fetch(url);
@@ -43,18 +44,28 @@
             }
         }
 
-        const getInitialDataAndAddFavProp = async function() {
-            data.places = await fetchPlacesFromAPI();
+        const getInitialDataAddFavPropAndSave = async function() {
+            if (data.places.length === 0) {
+                data.places = await fetchPlacesFromAPI();
 
-            data.places.forEach(place => {
-                place.fav = 'false'
-            });
+                data.places.forEach(place => {
+                    place.fav = 'false'
+                });
+
+                saveDataInLocalStorage();
+            }
+        }
+
+        const saveDataInLocalStorage = function() {
+            localStorage.setItem('placesData', JSON.stringify(data.places));
         }
 
         const markUnmarkAsFavorite = function(placeId, iconClicked) {
             const clickedPlace = data.places.filter(place => place.id === placeId)[0];
 
             clickedPlace.fav = clickedPlace.fav === 'false' ? 'true' : 'false';
+
+            saveDataInLocalStorage();
 
             app.render();
         }
@@ -87,7 +98,7 @@
         });
 
         const getInitDataAndRenderApp = async function() {
-            await getInitialDataAndAddFavProp();
+            await getInitialDataAddFavPropAndSave();
             app.render();
         };
 
