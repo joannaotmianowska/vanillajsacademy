@@ -54,7 +54,7 @@
         const markUnmarkAsFavorite = function(placeId, iconClicked) {
             const clickedPlace = data.places.filter(place => place.id === placeId)[0];
 
-            clickedPlace.fav = 'true';
+            clickedPlace.fav = clickedPlace.fav === 'false' ? 'true' : 'false';
 
             app.render();
         }
