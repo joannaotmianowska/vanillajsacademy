@@ -118,7 +118,7 @@
             if (!e.target.hasAttribute('aria-pressed')) return;
 
             markUnmarkAsFavorite(
-                e.target.parentElement.getAttribute('data-id'),
+                e.target.parentElement.parentElement.getAttribute('data-id'),
                 e.target
             )
         }
