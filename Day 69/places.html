@@ -129,7 +129,7 @@
             }
         }
 
-        const getInitialDataAddFavPropAndSave = async function() {
+        const getAndSaveData = async function() {
             if (data.places.length === 0) {
                 data.places = await fetchPlacesFromAPI();
 
@@ -246,7 +246,7 @@
         });
 
         const getInitDataAndRenderApp = async function() {
-            await getInitialDataAddFavPropAndSave();
+            await getAndSaveData();
 
             filterAndRenderPlaces(getFilterValue());
         };
