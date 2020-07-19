@@ -147,24 +147,42 @@
             localStorage.setItem('placesData', JSON.stringify(data.places));
         }
 
+        const clearFilters = function() {
+            data.places.map(place => {
+                place.hide = false;
+            });
+            app.render();
+        }
+
         const filterElements = function(filter) {
             const places = data.places;
-            console.log('filter')
-            if (filter === 'all') {
-                places.map(place => {
-                    place.hide = false;
 
-                });
-                app.render();
+            if (filter === 'all') {
+                clearFilters();
             } else if (filter === 'faves') {
+                clearFilters();
                 places.map(place => {
                     if (place.fav !== true) {
                         place.hide = true;
                     }
-
                 });
-                app.render();
+            } else if (filter === 'visited') {
+                clearFilters();
+                places.map(place => {
+                    if (place.visited !== true) {
+                        place.hide = true;
+                    }
+                });
+            }  else if (filter === 'not-visited') {
+                clearFilters();
+                places.map(place => {
+                    if (place.visited === true) {
+                        place.hide = true;
+                    }
+                });
             }
+            saveDataInLocalStorage();
+            app.render();
         }
 
         const markUnmarkReaction = function(placeId, iconClicked, reaction) {
