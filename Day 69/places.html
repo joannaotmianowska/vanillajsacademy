@@ -188,7 +188,9 @@
 
         const getFilterValue = function() {
             const inputs = Array.from(document.querySelectorAll('input'));
-            const filter = inputs.filter(input => input.checked === true)[0].value;
+
+            const filter = inputs.filter(input => input.checked)[0].value;
+
             return filter;
         }
 
