@@ -186,6 +186,12 @@
             app.render();
         }
 
+        const getFilterValue = function() {
+            const inputs = Array.from(document.querySelectorAll('input'));
+            const filter = inputs.filter(input => input.checked === true)[0].value;
+            return filter;
+        }
+
         const markUnmarkReaction = function(placeId, reaction) {
             const clickedPlace = data.places.filter(place => place.id === placeId)[0];
 
@@ -193,7 +199,7 @@
 
             saveDataInLocalStorage();
 
-            app.render();
+            filterAndRenderPlaces(getFilterValue());
         }
 
         const handleClick = function(e) {
@@ -205,6 +211,10 @@
                     reaction
                 )
             } else if (e.target.type === 'radio') {
+                console.log(e.target.checked)
+                const all = document.querySelectorAll('input');
+                console.log(all)
+                getFilterValue()
                if (e.target.checked) filterAndRenderPlaces(e.target.value);
             }
         }
@@ -238,7 +248,7 @@
         const getInitDataAndRenderApp = async function() {
             await getInitialDataAddFavPropAndSave();
 
-            app.render();
+            filterAndRenderPlaces(getFilterValue());
         };
 
         document.addEventListener('click', handleClick);
