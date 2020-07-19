@@ -153,26 +153,17 @@
         }
 
         const handleClick = function(e) {
-            if (!e.target.hasAttribute('aria-pressed')) return;
+            if (e.target.hasAttribute('aria-pressed')) {
+                const reaction = e.target.getAttribute('aria-label');
 
-            const reaction = e.target.getAttribute('aria-label');
-
-            markUnmarkReaction(
+                markUnmarkReaction(
                     e.target.parentElement.parentElement.parentElement.getAttribute('data-id'),
                     e.target,
                     reaction
                 )
-
-            // if (reaction === 'Favorite') {
-            //     markUnmarkReaction(
-            //         e.target.parentElement.parentElement.parentElement.getAttribute('data-id'),
-            //         e.target,
-            //         reaction
-            //     )
-            // } else if (reaction === 'Visited') {
-            //     console.log('visited')
-            // }
-
+            } else if (e.target.type === 'radio') {
+                console.log('filter')
+            }
         }
 
         const app = new Reef('#app', {
