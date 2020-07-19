@@ -32,6 +32,10 @@
             margin-bottom: 40px;
         }
 
+        .single-place[data-hide="true"] {
+            display: none;
+        }
+
         .main-info {
             display: flex;
             justify-content: space-between;
@@ -74,6 +78,10 @@
         h5 {
             font-size: 20px;
         }
+
+        /* .hide {
+            display: none;
+        } */
 	</style>
 </head>
 <body>
@@ -126,8 +134,9 @@
                 data.places = await fetchPlacesFromAPI();
 
                 data.places.forEach(place => {
-                    place.fav = 'false';
-                    place.visited = 'false';
+                    place.fav = false;
+                    place.visited = false;
+                    place.hide = false;
                 });
 
                 saveDataInLocalStorage();
@@ -138,14 +147,30 @@
             localStorage.setItem('placesData', JSON.stringify(data.places));
         }
 
+        const filterElements = function(filter) {
+            const places = data.places;
+            console.log('filter')
+            if (filter === 'all') {
+                places.map(place => {
+                    place.hide = false;
+
+                });
+                app.render();
+            } else if (filter === 'faves') {
+                places.map(place => {
+                    if (place.fav !== true) {
+                        place.hide = true;
+                    }
+
+                });
+                app.render();
+            }
+        }
+
         const markUnmarkReaction = function(placeId, iconClicked, reaction) {
             const clickedPlace = data.places.filter(place => place.id === placeId)[0];
 
-            if (reaction === 'Favorite') {
-                clickedPlace.fav = clickedPlace.fav === 'false' ? 'true' : 'false';
-            } else if (reaction === 'Visited') {
-                clickedPlace.visited = clickedPlace.visited === 'false' ? 'true' : 'false';
-            }
+            clickedPlace[reaction] = clickedPlace[reaction] === false ? true : false;
 
             saveDataInLocalStorage();
 
@@ -154,7 +179,7 @@
 
         const handleClick = function(e) {
             if (e.target.hasAttribute('aria-pressed')) {
-                const reaction = e.target.getAttribute('aria-label');
+                const reaction = e.target.getAttribute('data-reaction');
 
                 markUnmarkReaction(
                     e.target.parentElement.parentElement.parentElement.getAttribute('data-id'),
@@ -162,7 +187,7 @@
                     reaction
                 )
             } else if (e.target.type === 'radio') {
-                console.log('filter')
+               if (e.target.checked) filterElements(e.target.value);
             }
         }
 
@@ -172,13 +197,13 @@
 
                 if (!places) return '<p>Something went wrong. Please refresh the site.</p>';
 
-                const placesList = places.map(({ place, description, id, fav, img, visited }) => (
-                    `<li class="single-place" data-id=${id}>
+                const placesList = places.map(({ place, description, id, fav, img, visited, hide }) => (
+                    `<li class="single-place" data-hide="${hide}" data-id=${id}>
                         <div class="main-info">
                             <h5>${place}</h5>
                             <div class="reactions">
-                                <button class="fave" aria-label="Favorite" aria-pressed=${fav}>❤</button>
-                                <button class="visited" aria-label="Visited" aria-pressed=${visited}>Visited</button>
+                                <button class="fave" data-reaction="fav" aria-label="Favorite" aria-pressed="${fav}"">❤</button>
+                                <button class="visited" data-reaction="visited" aria-label="Visited" aria-pressed="${visited}"">Visited</button>
                             </div>
                         </div>
                         <div class="details">
