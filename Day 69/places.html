@@ -151,10 +151,11 @@
             data.places.map(place => {
                 place.hide = false;
             });
+
             app.render();
         }
 
-        const filterElements = function(filter) {
+        const filterAndRenderPlaces = function(filter) {
             const places = data.places;
 
             if (filter === 'all') {
@@ -185,10 +186,10 @@
             app.render();
         }
 
-        const markUnmarkReaction = function(placeId, iconClicked, reaction) {
+        const markUnmarkReaction = function(placeId, reaction) {
             const clickedPlace = data.places.filter(place => place.id === placeId)[0];
 
-            clickedPlace[reaction] = clickedPlace[reaction] === false ? true : false;
+            clickedPlace[reaction] = !clickedPlace[reaction];
 
             saveDataInLocalStorage();
 
@@ -201,11 +202,10 @@
 
                 markUnmarkReaction(
                     e.target.parentElement.parentElement.parentElement.getAttribute('data-id'),
-                    e.target,
                     reaction
                 )
             } else if (e.target.type === 'radio') {
-               if (e.target.checked) filterElements(e.target.value);
+               if (e.target.checked) filterAndRenderPlaces(e.target.value);
             }
         }
 
@@ -237,6 +237,7 @@
 
         const getInitDataAndRenderApp = async function() {
             await getInitialDataAddFavPropAndSave();
+
             app.render();
         };
 
