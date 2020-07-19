@@ -188,19 +188,14 @@
 
         const getFilterValue = function() {
             const inputs = Array.from(document.querySelectorAll('input'));
-
             const filter = inputs.filter(input => input.checked)[0].value;
-
             return filter;
         }
 
         const toggleReaction = function(placeId, reaction) {
             const clickedPlace = data.places.filter(place => place.id === placeId)[0];
-
             clickedPlace[reaction] = !clickedPlace[reaction];
-
             saveDataInLocalStorage();
-
             filterAndRenderPlaces(getFilterValue());
         }
 
@@ -243,7 +238,6 @@
 
         const getInitDataAndRenderApp = async function() {
             await getAndSaveData();
-
             filterAndRenderPlaces(getFilterValue());
         };
 
