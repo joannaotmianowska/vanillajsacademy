@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Explore</title>
+
+	<style type="text/css">
+		body {
+			margin: 1em auto;
+			max-width: 60em;
+			width: 88%;
+            background-color: #bbe4d3;
+            font-family: 'Source Sans Pro', sans-serif;
+            color: #1D1D1D;
+		}
+
+        .places-list {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .single-place {
+            width: 400px;
+            max-height: 500px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
+            background-color: #FFFF;
+            border-radius: 3px;
+            padding: 10px 30px;
+            margin-bottom: 40px;
+        }
+
+        .main-info {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .details {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .details img {
+            height: 200px;
+            border-radius: 3px;
+        }
+
+        button {
+            background: transparent;
+            border: 0;
+            font-size: 2em;
+        }
+
+        button[aria-pressed="true"] {
+            color: red;
+        }
+
+        h5 {
+            font-size: 20px;
+        }
+	</style>
+</head>
+<body>
+
+	<h1>Explore</h1>
+	<p>Explore cool, quirky places in your own backyard.</p>
+    <div class="filters">
+        <strong>Filter:</strong>
+        <label>
+            <input type="radio" name="view" value="all" checked>
+            All Places
+        </label>
+
+        <label>
+            <input type="radio" name="view" value="faves">
+            Favorites
+        </label>
+
+        <label>
+            <input type="radio" name="view" value="visited">
+            Visited
+        </label>
+
+        <label>
+            <input type="radio" name="view" value="not-visited">
+            Not Visited
+        </label>
+    </div>
+	<div id="app">Loading...</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/reefjs@7/dist/reef.js"></script>
+	<script>
+		const url = 'https://vanillajsacademy.com/api/places.json';
+        let data = {
+            places: JSON.parse(localStorage.getItem('placesData')) || []
+        };
+
+        const fetchPlacesFromAPI = async function() {
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                return data;
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        const getInitialDataAddFavPropAndSave = async function() {
+            if (data.places.length === 0) {
+                data.places = await fetchPlacesFromAPI();
+
+                data.places.forEach(place => {
+                    place.fav = 'false'
+                });
+
+                saveDataInLocalStorage();
+            }
+        }
+
+        const saveDataInLocalStorage = function() {
+            localStorage.setItem('placesData', JSON.stringify(data.places));
+        }
+
+        const markUnmarkAsFavorite = function(placeId, iconClicked) {
+            const clickedPlace = data.places.filter(place => place.id === placeId)[0];
+
+            clickedPlace.fav = clickedPlace.fav === 'false' ? 'true' : 'false';
+
+            saveDataInLocalStorage();
+
+            app.render();
+        }
+
+        const handleClick = function(e) {
+            if (!e.target.hasAttribute('aria-pressed')) return;
+
+            markUnmarkAsFavorite(
+                e.target.parentElement.parentElement.getAttribute('data-id'),
+                e.target
+            )
+        }
+
+        const app = new Reef('#app', {
+            data,
+	        template: ({ places }) => {
+
+                if (!places) return '<p>Something went wrong. Please refresh the site.</p>';
+
+                const placesList = places.map(({ place, description, id, fav, img }) => (
+                    `<li class="single-place" data-id=${id}>
+                        <div class="main-info">
+                            <h5>${place}</h5>
+                            <button class="fave" aria-label="Favorite" aria-pressed=${fav}>❤</button>
+                        </div>
+                        <div class="details">
+                            <img alt="" src="${img}">
+                            <p>${description}</p>
+                        </div>
+                    </li>`
+                )).join('');
+
+                return `<ul class="places-list">${placesList}</ul>`;
+            }
+        });
+
+        const getInitDataAndRenderApp = async function() {
+            await getInitialDataAddFavPropAndSave();
+            app.render();
+        };
+
+        document.addEventListener('click', handleClick);
+
+        getInitDataAndRenderApp();
+	</script>
+</body>
+</html>
