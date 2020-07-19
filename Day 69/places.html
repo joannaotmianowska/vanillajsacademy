@@ -192,7 +192,7 @@
             return filter;
         }
 
-        const markUnmarkReaction = function(placeId, reaction) {
+        const toggleReaction = function(placeId, reaction) {
             const clickedPlace = data.places.filter(place => place.id === placeId)[0];
 
             clickedPlace[reaction] = !clickedPlace[reaction];
@@ -204,18 +204,12 @@
 
         const handleClick = function(e) {
             if (e.target.hasAttribute('aria-pressed')) {
-                const reaction = e.target.getAttribute('data-reaction');
-
-                markUnmarkReaction(
+                toggleReaction(
                     e.target.closest('.single-place').getAttribute('data-id'),
-                    reaction
+                    e.target.getAttribute('data-reaction')
                 )
-            } else if (e.target.type === 'radio') {
-                console.log(e.target.checked)
-                const all = document.querySelectorAll('input');
-                console.log(all)
-                getFilterValue()
-               if (e.target.checked) filterAndRenderPlaces(e.target.value);
+            } else if (e.target.checked) {
+                filterAndRenderPlaces(e.target.value);
             }
         }
 
