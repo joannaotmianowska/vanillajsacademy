@@ -49,14 +49,26 @@
             border-radius: 3px;
         }
 
-        button {
+        .fave {
             background: transparent;
             border: 0;
             font-size: 2em;
         }
 
-        button[aria-pressed="true"] {
+        .visited {
+            font-size: 14px;
+            background-color: #ffff;
+            border: 2px solid #bbe4d3;
+            padding: 14px;
+            border-radius: 3px;
+        }
+
+        .fave[aria-pressed="true"] {
             color: red;
+        }
+
+        .visited[aria-pressed="true"] {
+            background-color: #bbe4d3;
         }
 
         h5 {
@@ -114,7 +126,8 @@
                 data.places = await fetchPlacesFromAPI();
 
                 data.places.forEach(place => {
-                    place.fav = 'false'
+                    place.fav = 'false';
+                    place.visited = 'false';
                 });
 
                 saveDataInLocalStorage();
@@ -125,10 +138,14 @@
             localStorage.setItem('placesData', JSON.stringify(data.places));
         }
 
-        const markUnmarkAsFavorite = function(placeId, iconClicked) {
+        const markUnmarkReaction = function(placeId, iconClicked, reaction) {
             const clickedPlace = data.places.filter(place => place.id === placeId)[0];
 
-            clickedPlace.fav = clickedPlace.fav === 'false' ? 'true' : 'false';
+            if (reaction === 'Favorite') {
+                clickedPlace.fav = clickedPlace.fav === 'false' ? 'true' : 'false';
+            } else if (reaction === 'Visited') {
+                clickedPlace.visited = clickedPlace.visited === 'false' ? 'true' : 'false';
+            }
 
             saveDataInLocalStorage();
 
@@ -138,10 +155,24 @@
         const handleClick = function(e) {
             if (!e.target.hasAttribute('aria-pressed')) return;
 
-            markUnmarkAsFavorite(
-                e.target.parentElement.parentElement.getAttribute('data-id'),
-                e.target
-            )
+            const reaction = e.target.getAttribute('aria-label');
+
+            markUnmarkReaction(
+                    e.target.parentElement.parentElement.parentElement.getAttribute('data-id'),
+                    e.target,
+                    reaction
+                )
+
+            // if (reaction === 'Favorite') {
+            //     markUnmarkReaction(
+            //         e.target.parentElement.parentElement.parentElement.getAttribute('data-id'),
+            //         e.target,
+            //         reaction
+            //     )
+            // } else if (reaction === 'Visited') {
+            //     console.log('visited')
+            // }
+
         }
 
         const app = new Reef('#app', {
@@ -150,11 +181,14 @@
 
                 if (!places) return '<p>Something went wrong. Please refresh the site.</p>';
 
-                const placesList = places.map(({ place, description, id, fav, img }) => (
+                const placesList = places.map(({ place, description, id, fav, img, visited }) => (
                     `<li class="single-place" data-id=${id}>
                         <div class="main-info">
                             <h5>${place}</h5>
-                            <button class="fave" aria-label="Favorite" aria-pressed=${fav}>❤</button>
+                            <div class="reactions">
+                                <button class="fave" aria-label="Favorite" aria-pressed=${fav}>❤</button>
+                                <button class="visited" aria-label="Visited" aria-pressed=${visited}>Visited</button>
+                            </div>
                         </div>
                         <div class="details">
                             <img alt="" src="${img}">
