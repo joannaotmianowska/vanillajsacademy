@@ -207,7 +207,7 @@
                 const reaction = e.target.getAttribute('data-reaction');
 
                 markUnmarkReaction(
-                    e.target.parentElement.parentElement.parentElement.getAttribute('data-id'),
+                    e.target.closest('.single-place').getAttribute('data-id'),
                     reaction
                 )
             } else if (e.target.type === 'radio') {
